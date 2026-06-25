@@ -1,0 +1,86 @@
+/* Template Name: Hously - Tailwind CSS Real Estate Landing & Admin Dashboard Template
+   Author: Shreethemes
+   Email: support@shreethemes.in
+   Website: https://shreethemes.in
+   Version: 3.0.0
+   Created: June 2022
+   File: Main Css File
+*/
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+/* Tailwind CSS */
+@import "tailwindcss";
+
+/* Dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme */
+@theme {
+   /* Font Family */
+   --font-league: "League Spartan", "serif";
+   /* Breakpoints */
+   --breakpoint-xs: 540px;
+   --breakpoint-sm: 640px;
+   --breakpoint-md: 720px;
+   --breakpoint-lg: 960px;
+   --breakpoint-xl: 1140px;
+   --breakpoint-2xl: 1140px;
+   /* Colors */
+   --color-primary: #00a63e;
+   --color-primary-50: #33ff7e;
+   --color-primary-100: #1fff71;
+   --color-primary-200: #0aff64;
+   --color-primary-300: #00f55a;
+   --color-primary-400: #00e052;
+   --color-primary-500: #00cc4b;
+   --color-primary-dark: #008f34;
+   --color-red: #d72a1d;
+   /* Font Sizes */
+   --text-base: 17px;
+   --text-base--line-height: 24px;
+   /* Shadows */
+   --shadow-xs: 0 2px 4px 0 rgb(0 0 0 / 0.1);
+   --shadow-sm: 0 0 3px rgb(0 0 0 / 0.1);
+   --shadow-md: 0 5px 13px rgb(0 0 0 / 0.1);
+   --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.1);
+   --shadow-testi: 2px 2px 2px -1px rgb(0 0 0 / 0.1);
+   /* z-indexs */
+   --z-1: 1;
+   --z-2: 2;
+   --z-3: 3;
+   --z-999: 999;
+}
+
+/* Custom */
+@import "./custom/_general.css";
+@import "./custom/pages/_helper.css";
+@import "./custom/structure/_topnav.css";
+@import "./custom/structure/_footer.css";
+@import "./components/_buttons.css";
+@import "./custom/pages/_hero.css";
+@import "./custom/pages/_countdown.css";
+@import "./custom/pages/_contact.css";
+@import "./custom/pages/_swiper-slider.css";
+@import "./custom/pages/_testi.css";
+@import "./custom/pages/_choices.css";
+
+
+/* For Pagination */
+.custom-pagination .swiper-pagination-bullet {
+   padding: calc(var(--spacing) * .5);
+   transition-property: all;
+   --tw-duration: 500ms;
+   transition-duration: .5s;
+   --tw-ease: var(--ease-in-out);
+   transition-timing-function: var(--ease-in-out);
+   border-color: var(--color-white);
+   border-radius: calc(infinity * 1px);
+   border-width: 2px;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+   background-color: var(--color-primary);
+   border-color: var(--color-primary);
+}
