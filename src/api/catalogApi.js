@@ -36,7 +36,25 @@ export const getCategories = async (params = {}) => {
     return data
   }
 
+  if (Array.isArray(data?.categories)) {
+    return data
+  }
+
   return Array.isArray(data?.categories) ? data.categories : []
+}
+
+/**
+ * GET /api/public/brands
+ * @returns {Array}
+ */
+export const getBrands = async (params = {}) => {
+  const data = await apiGet(`/api/public/brands${buildQueryString(params)}`)
+
+  if (Array.isArray(data)) {
+    return data
+  }
+
+  return Array.isArray(data?.brands) ? data.brands : []
 }
 
 /**

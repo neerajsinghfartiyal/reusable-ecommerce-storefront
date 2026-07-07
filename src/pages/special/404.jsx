@@ -1,40 +1,42 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import LogoLight from "../../assets/images/logo-icon-64.png";
-import ErrorImage from "../../assets/images/error.png";
-
-import Switcher from "../../component/switcher";
+import velmoraMark from '../../assets/images/velmora-mark.svg'
+import { DEFAULT_STORE_NAME, STORE_TAGLINE } from '../../lib/productMappers.js'
+import Switcher from '../../component/switcher'
 
 export default function Page404() {
+  return (
+    <>
+      <section className="velmora-special-page">
+        <div className="w-full max-w-lg text-center">
+          <Link to="/" className="inline-flex items-center gap-2.5">
+            <img src={velmoraMark} alt="" className="size-10 rounded-lg" aria-hidden="true" />
+            <span className="font-semibold text-lg tracking-[0.16em] uppercase text-white">
+              {DEFAULT_STORE_NAME}
+            </span>
+          </Link>
 
-    return (
-        <>
-            <section className="relative bg-primary/5">
-                <div className="container-fluid relative">
-                    <div className="grid grid-cols-1">
-                        <div className="flex flex-col min-h-screen justify-center md:px-10 py-10 px-4">
-                            <div className="text-center">
-                                <Link to="/"><img src={LogoLight} className="mx-auto" alt="" /></Link>
-                            </div>
-                            <div className="title-heading text-center my-auto">
-                                <img src={ErrorImage} className="mx-auto" alt="" />
-                                <h1 className="mt-3 mb-6 md:text-4xl text-3xl font-bold">Page Not Found?</h1>
-                                <p className="text-slate-400">Whoops, this is embarassing. <br /> Looks like the page you were looking for wasn't found.</p>
+          <p className="text-[#F59E0B] text-sm font-semibold mt-8 uppercase tracking-widest">404</p>
+          <h1 className="mt-3 text-3xl md:text-4xl font-bold text-white">Page not found</h1>
+          <p className="text-slate-300 mt-4 leading-relaxed">
+            The page you are looking for may have moved or is no longer available. Head back to the
+            shop to continue browsing.
+          </p>
 
-                                <div className="mt-4">
-                                    <Link to="/" className="btn bg-primary hover:bg-primary-dark border-primary hover:border-primary-dark text-white rounded-md">Back to Home</Link>
-                                </div>
-                            </div>
-                            <div className="text-center">
-                                <p className="mb-0 text-slate-400">© {(new Date().getFullYear())}{" "} Hously. Design & Develop with <i className="ri-heart-fill text-red-600"></i> by <Link to="https://shreethemes.in/" target="_blank" className="text-reset">Shreethemes</Link>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <Switcher />
-        </>
-    );
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link to="/shop" className="velmora-btn-accent">
+              Go to Shop
+            </Link>
+            <Link to="/" className="velmora-btn-outline-light">
+              Back to Home
+            </Link>
+          </div>
 
+          <p className="mt-10 text-xs text-slate-400">{STORE_TAGLINE}</p>
+        </div>
+      </section>
+      <Switcher />
+    </>
+  )
 }

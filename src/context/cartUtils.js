@@ -8,22 +8,30 @@ const getEntityId = (value) => {
   return String(value)
 }
 
-export const mapShippingOption = (option = {}) => ({
-  id: getEntityId(option),
-  code: option.code || '',
-  name: option.displayName || option.name || 'Shipping method',
-  description: option.description || '',
-  charge: Number(option.charge ?? 0),
-})
+export const mapShippingOption = (option) => {
+  const safeOption = option && typeof option === 'object' ? option : {}
 
-export const mapPaymentOption = (option = {}) => ({
-  id: getEntityId(option),
-  code: option.code || '',
-  name: option.displayName || option.name || 'Payment option',
-  description: option.description || '',
-  type: option.type || '',
-  provider: option.provider || '',
-})
+  return {
+    id: getEntityId(safeOption),
+    code: safeOption.code || '',
+    name: safeOption.displayName || safeOption.name || 'Shipping method',
+    description: safeOption.description || '',
+    charge: Number(safeOption.charge ?? 0),
+  }
+}
+
+export const mapPaymentOption = (option) => {
+  const safeOption = option && typeof option === 'object' ? option : {}
+
+  return {
+    id: getEntityId(safeOption),
+    code: safeOption.code || '',
+    name: safeOption.displayName || safeOption.name || 'Payment option',
+    description: safeOption.description || '',
+    type: safeOption.type || '',
+    provider: safeOption.provider || '',
+  }
+}
 
 export const mapShippingOptionsResponse = (data = {}) => ({
   shippingEnabled: data.shippingEnabled !== false,
@@ -43,17 +51,18 @@ export const mapPaymentOptionsResponse = (data = {}) => ({
   selectedPaymentMethodCode: data.selectedPaymentMethodCode || '',
 })
 
+const emptySelectedMethod = () => ({ id: '', code: '', name: '' })
+
 const mapSelectedMethod = (methodRef, code = '') => {
-  const id = getEntityId(methodRef)
-  const name =
-    methodRef && typeof methodRef === 'object'
-      ? methodRef.displayName || methodRef.name || ''
-      : ''
+  const hasMethodObject = methodRef != null && typeof methodRef === 'object'
+  const normalizedCode = code || (hasMethodObject ? methodRef.code || '' : '')
 
   return {
-    id,
-    code: code || (typeof methodRef === 'object' ? methodRef.code || '' : ''),
-    name,
+    id: getEntityId(methodRef),
+    code: normalizedCode,
+    name: hasMethodObject
+      ? methodRef.displayName || methodRef.name || ''
+      : '',
   }
 }
 
@@ -68,8 +77,8 @@ export const mapCartFromApi = (cart) => {
       shippingAmount: 0,
       discountAmount: 0,
       totalAmount: 0,
-      selectedShippingMethod: { id: '', code: '', name: '' },
-      selectedPaymentMethod: { id: '', code: '', name: '' },
+      selectedShippingMethod: emptySelectedMethod(),
+      selectedPaymentMethod: emptySelectedMethod(),
     }
   }
 

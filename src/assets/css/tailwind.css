@@ -27,15 +27,19 @@
    --breakpoint-lg: 960px;
    --breakpoint-xl: 1140px;
    --breakpoint-2xl: 1140px;
-   /* Colors */
-   --color-primary: #00a63e;
-   --color-primary-50: #33ff7e;
-   --color-primary-100: #1fff71;
-   --color-primary-200: #0aff64;
-   --color-primary-300: #00f55a;
-   --color-primary-400: #00e052;
-   --color-primary-500: #00cc4b;
-   --color-primary-dark: #008f34;
+   /* Colors — VELMORA brand palette */
+   --color-primary: #2563EB;
+   --color-primary-50: #EFF6FF;
+   --color-primary-100: #DBEAFE;
+   --color-primary-200: #BFDBFE;
+   --color-primary-300: #93C5FD;
+   --color-primary-400: #60A5FA;
+   --color-primary-500: #2563EB;
+   --color-primary-dark: #1D4ED8;
+   --color-brand-dark: #111827;
+   --color-brand-highlight: #F59E0B;
+   --color-brand-muted: #64748B;
+   --color-brand-surface: #F8FAFC;
    --color-red: #d72a1d;
    /* Font Sizes */
    --text-base: 17px;
@@ -50,6 +54,8 @@
    --z-1: 1;
    --z-2: 2;
    --z-3: 3;
+   --z-90: 90;
+   --z-100: 100;
    --z-999: 999;
 }
 
@@ -83,4 +89,3494 @@
 .custom-pagination .swiper-pagination-bullet-active {
    background-color: var(--color-primary);
    border-color: var(--color-primary);
+}
+
+/* VELMORA marketplace storefront polish */
+#topnav.velmora-store-header {
+   background-color: #ffffff !important;
+   border-bottom: 1px solid rgb(226 232 240 / 0.95);
+   box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+}
+
+.dark #topnav.velmora-store-header,
+#topnav.velmora-store-header.nav-sticky {
+   background-color: #ffffff !important;
+}
+
+.dark #topnav.velmora-store-header {
+   background-color: rgb(15 23 42) !important;
+   border-bottom-color: rgb(55 65 81);
+}
+
+#topnav.velmora-store-header .logo {
+   min-width: 0;
+}
+
+#topnav.velmora-ecommerce-header {
+   height: auto;
+   float: none;
+   background-color: #ffffff !important;
+   z-index: 90;
+   overflow: visible;
+   isolation: isolate;
+}
+
+.dark #topnav.velmora-ecommerce-header {
+   background-color: rgb(15 23 42) !important;
+}
+
+#topnav.velmora-ecommerce-header .container {
+   max-width: 1280px;
+   margin-inline: auto;
+   padding-inline: 1rem;
+}
+
+:root {
+   --velmora-header-offset: 12rem;
+   --velmora-cat-nav-height: 5.25rem;
+}
+
+@media (min-width: 768px) {
+   :root {
+      --velmora-header-offset: 10.75rem;
+   }
+}
+
+@media (min-width: 1024px) {
+   :root {
+      --velmora-header-offset: 13.75rem;
+      --velmora-cat-nav-height: 5.5rem;
+   }
+}
+
+#topnav.velmora-ecommerce-header.is-cat-nav-compact {
+   --velmora-cat-nav-height: 3.125rem;
+}
+
+.velmora-main-offset {
+   padding-top: 0.75rem;
+   margin-top: var(--velmora-header-offset);
+}
+
+.velmora-page-offset {
+   margin-top: var(--velmora-header-offset) !important;
+}
+
+body:has(#topnav.velmora-ecommerce-header) .mt-20 {
+   margin-top: var(--velmora-header-offset) !important;
+}
+
+.scrollbar-hide {
+   -ms-overflow-style: none;
+   scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+   display: none;
+}
+
+.velmora-product-media {
+   position: relative;
+   aspect-ratio: 1 / 1;
+   background: #ffffff;
+   border-bottom: 1px solid rgb(226 232 240 / 0.8);
+}
+
+.velmora-product-media-compact {
+   aspect-ratio: 1 / 1;
+}
+
+.dark .velmora-product-media {
+   background: rgb(15 23 42);
+   border-bottom-color: rgb(55 65 81);
+}
+
+.velmora-product-media img {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   padding: 0.5rem;
+}
+
+@media (hover: hover) {
+   .velmora-product-media img {
+      transition: transform 0.2s ease;
+   }
+
+   .group:hover .velmora-product-media img {
+      transform: scale(1.03);
+   }
+}
+
+.velmora-product-badge-discount {
+   position: absolute;
+   top: 0.5rem;
+   inset-inline-start: 0.5rem;
+   z-index: 1;
+   border-radius: 0.375rem;
+   background: #f59e0b;
+   color: #ffffff;
+   font-size: 0.625rem;
+   font-weight: 800;
+   padding: 0.2rem 0.45rem;
+   line-height: 1.2;
+   box-shadow: 0 1px 3px rgb(15 23 42 / 0.15);
+}
+
+.velmora-product-badge-stock {
+   position: absolute;
+   bottom: 0.5rem;
+   inset-inline-end: 0.5rem;
+   z-index: 1;
+   border-radius: 999px;
+   font-size: 0.5625rem;
+   font-weight: 700;
+   padding: 0.15rem 0.45rem;
+   line-height: 1.2;
+   letter-spacing: 0.02em;
+}
+
+.velmora-product-badge-stock.is-in-stock {
+   background: rgb(16 185 129 / 0.92);
+   color: #ffffff;
+}
+
+.velmora-product-badge-stock.is-out-of-stock {
+   background: rgb(71 85 105 / 0.92);
+   color: #ffffff;
+}
+
+.velmora-product-card-compact {
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   overflow: hidden;
+}
+
+.dark .velmora-product-card-compact {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+@media (hover: hover) {
+   .velmora-product-card-compact {
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+   }
+
+   .velmora-product-card-compact:hover {
+      box-shadow: 0 6px 16px rgb(15 23 42 / 0.07);
+      border-color: rgb(37 99 235 / 0.28);
+   }
+}
+
+.velmora-product-card-body {
+   display: flex;
+   flex-direction: column;
+   gap: 0.3rem;
+   padding: 0.55rem 0.65rem 0.65rem;
+   min-height: 6.25rem;
+}
+
+.velmora-product-card-offer {
+   font-size: 0.625rem;
+   font-weight: 700;
+   color: #059669;
+   line-height: 1.2;
+}
+
+.dark .velmora-product-card-offer {
+   color: #34d399;
+}
+
+.velmora-product-price-block {
+   display: flex;
+   flex-direction: column;
+   gap: 0.1rem;
+}
+
+.velmora-product-card-meta {
+   font-size: 0.5625rem;
+   font-weight: 700;
+   color: #64748b;
+   text-transform: uppercase;
+   letter-spacing: 0.06em;
+   line-height: 1.2;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.velmora-product-card-title {
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+   line-height: 1.35;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   min-height: 2.2rem;
+}
+
+.dark .velmora-product-card-title {
+   color: #ffffff;
+}
+
+.velmora-product-card-title:hover {
+   color: #2563eb;
+}
+
+.velmora-product-card-footer {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 0.5rem;
+   margin-top: auto;
+   padding-top: 0.35rem;
+}
+
+.velmora-product-card-price {
+   font-size: 0.9375rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.1;
+}
+
+.dark .velmora-product-card-price {
+   color: #ffffff;
+}
+
+.velmora-product-card-compare {
+   font-size: 0.6875rem;
+   color: #64748b;
+   text-decoration: line-through;
+   line-height: 1.2;
+}
+
+.velmora-product-card-cta {
+   flex-shrink: 0;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(37 99 235 / 0.25);
+   background: rgb(37 99 235 / 0.06);
+   color: #2563eb;
+   font-size: 0.6875rem;
+   font-weight: 700;
+   padding: 0.35rem 0.65rem;
+   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.velmora-product-card-cta:hover {
+   background: #2563eb;
+   border-color: #2563eb;
+   color: #ffffff;
+}
+
+.velmora-product-scroll-rail {
+   display: flex;
+   gap: 0.75rem;
+   overflow-x: auto;
+   scroll-snap-type: x mandatory;
+   padding-bottom: 0.35rem;
+   -webkit-overflow-scrolling: touch;
+}
+
+.velmora-product-scroll-rail::-webkit-scrollbar {
+   height: 5px;
+}
+
+.velmora-product-scroll-rail::-webkit-scrollbar-thumb {
+   background: rgb(148 163 184 / 0.45);
+   border-radius: 999px;
+}
+
+.velmora-product-scroll-item {
+   flex: 0 0 auto;
+   width: min(10.25rem, 42vw);
+   scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+   .velmora-product-scroll-item {
+      width: 11rem;
+   }
+}
+
+.velmora-product-grid-fit {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(10.5rem, 11.75rem));
+   gap: 0.75rem;
+   width: fit-content;
+   max-width: 100%;
+}
+
+.velmora-home-rail-panel {
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.8);
+   background: rgb(255 255 255 / 0.82);
+   padding: 0.875rem;
+}
+
+.velmora-home-rail-commercial {
+   background: linear-gradient(180deg, rgb(248 250 252 / 0.95) 0%, rgb(255 255 255 / 0.98) 100%);
+}
+
+.dark .velmora-home-rail-commercial {
+   background: linear-gradient(180deg, rgb(30 41 59 / 0.45) 0%, rgb(15 23 42 / 0.65) 100%);
+}
+
+.velmora-home-rail-header {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 0.75rem;
+}
+
+.velmora-home-rail-badge {
+   display: inline-flex;
+   align-items: center;
+   border-radius: 999px;
+   background: rgb(37 99 235 / 0.08);
+   color: #2563eb;
+   font-size: 0.625rem;
+   font-weight: 800;
+   letter-spacing: 0.06em;
+   text-transform: uppercase;
+   padding: 0.2rem 0.55rem;
+   margin-bottom: 0.35rem;
+}
+
+.dark .velmora-home-rail-badge {
+   background: rgb(37 99 235 / 0.18);
+   color: #93c5fd;
+}
+
+.velmora-home-rail-title {
+   font-size: 1.0625rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.25;
+}
+
+@media (min-width: 768px) {
+   .velmora-home-rail-title {
+      font-size: 1.25rem;
+   }
+}
+
+.dark .velmora-home-rail-title {
+   color: #ffffff;
+}
+
+.velmora-home-rail-desc {
+   margin-top: 0.25rem;
+   font-size: 0.8125rem;
+   color: #64748b;
+   line-height: 1.45;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+}
+
+.velmora-home-rail-link {
+   color: #2563eb;
+   font-size: 0.8125rem;
+   font-weight: 700;
+}
+
+.velmora-home-rail-link:hover {
+   text-decoration: underline;
+}
+
+.dark .velmora-home-rail-panel {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42 / 0.55);
+}
+
+.velmora-home-rail-fit {
+   width: fit-content;
+   max-width: 100%;
+}
+
+.velmora-home-rail-mini {
+   display: inline-block;
+   width: auto;
+   max-width: 100%;
+}
+
+.velmora-category-showcase-grid {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+   .velmora-category-showcase-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+   }
+}
+
+@media (min-width: 1024px) {
+   .velmora-category-showcase-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+   }
+}
+
+.velmora-category-showcase-card {
+   min-width: 0;
+}
+
+@media (max-width: 639px) {
+   .velmora-category-showcase-mobile-rail {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 0.35rem;
+      -webkit-overflow-scrolling: touch;
+   }
+
+   .velmora-category-showcase-mobile-rail .velmora-category-showcase-card {
+      flex: 0 0 auto;
+      width: min(9.5rem, 44vw);
+      scroll-snap-align: start;
+   }
+}
+
+.velmora-section-panel {
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 1rem;
+   background: #ffffff;
+   box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+.dark .velmora-section-panel {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-pdp-gallery-main {
+   position: relative;
+   display: block;
+   aspect-ratio: 1 / 1;
+   min-height: 17.5rem;
+   max-height: 36rem;
+   background: #ffffff;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 0.875rem;
+   overflow: hidden;
+   cursor: zoom-in;
+   padding: 0;
+}
+
+@media (min-width: 1024px) {
+   .velmora-pdp-gallery-main {
+      min-height: 22rem;
+   }
+}
+
+.dark .velmora-pdp-gallery-main {
+   background: rgb(15 23 42);
+   border-color: rgb(55 65 81);
+}
+
+.velmora-pdp-gallery-main img {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   padding: 1.25rem;
+}
+
+.velmora-pdp-thumb {
+   border: 2px solid transparent;
+   border-radius: 0.75rem;
+   background: #f8fafc;
+   overflow: hidden;
+   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dark .velmora-pdp-thumb {
+   background: rgb(30 41 59);
+}
+
+.velmora-pdp-thumb.is-active {
+   border-color: #2563eb;
+   box-shadow: 0 0 0 1px rgb(37 99 235 / 0.25);
+}
+
+.velmora-pdp-thumb img {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   padding: 0.35rem;
+   aspect-ratio: 1 / 1;
+}
+
+
+.velmora-pdp-buybox {
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 1rem;
+   background: #ffffff;
+   box-shadow: 0 8px 28px rgb(15 23 42 / 0.08);
+   overflow: hidden;
+}
+
+.dark .velmora-pdp-buybox {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+   box-shadow: 0 8px 28px rgb(0 0 0 / 0.22);
+}
+
+.velmora-pdp-gallery-count {
+   position: absolute;
+   bottom: 0.5rem;
+   inset-inline-end: 0.5rem;
+   z-index: 1;
+   border-radius: 999px;
+   background: rgb(17 24 39 / 0.72);
+   color: #ffffff;
+   font-size: 0.625rem;
+   font-weight: 700;
+   padding: 0.15rem 0.45rem;
+   line-height: 1.2;
+}
+
+.velmora-pdp-gallery-commerce {
+   box-shadow: 0 8px 24px rgb(15 23 42 / 0.06);
+   border-color: rgb(226 232 240);
+}
+
+.dark .velmora-pdp-gallery-commerce {
+   box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+.velmora-pdp-title {
+   font-size: 1.375rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.25;
+   letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+   .velmora-pdp-title {
+      font-size: 1.625rem;
+   }
+}
+
+.dark .velmora-pdp-title {
+   color: #ffffff;
+}
+
+.velmora-pdp-price-label {
+   font-size: 0.6875rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+   color: #64748b;
+}
+
+.velmora-pdp-price-main {
+   font-size: 1.75rem;
+   font-weight: 800;
+   color: #111827;
+   letter-spacing: -0.02em;
+   line-height: 1.1;
+}
+
+.dark .velmora-pdp-price-main {
+   color: #ffffff;
+}
+
+.velmora-pdp-price-mrp {
+   font-size: 0.8125rem;
+   color: #64748b;
+   text-decoration: line-through;
+}
+
+.velmora-pdp-discount-pill {
+   display: inline-flex;
+   border-radius: 0.375rem;
+   background: #f59e0b;
+   color: #ffffff;
+   font-size: 0.6875rem;
+   font-weight: 800;
+   padding: 0.2rem 0.5rem;
+}
+
+.velmora-pdp-buybox-premium {
+   box-shadow: 0 10px 28px rgb(15 23 42 / 0.08);
+}
+
+.velmora-pdp-buybox-pricehead {
+   padding: 1rem 1.125rem;
+   border-bottom: 1px solid rgb(226 232 240 / 0.9);
+   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.dark .velmora-pdp-buybox-pricehead {
+   border-bottom-color: rgb(55 65 81);
+   background: linear-gradient(180deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%);
+}
+
+.velmora-pdp-qty-control {
+   display: inline-flex;
+   align-items: center;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240);
+   overflow: hidden;
+   background: #ffffff;
+}
+
+.dark .velmora-pdp-qty-control {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-pdp-qty-btn {
+   padding: 0.55rem 0.85rem;
+   font-size: 1.125rem;
+   line-height: 1;
+}
+
+.velmora-pdp-qty-btn:hover {
+   background: rgb(248 250 252);
+}
+
+.dark .velmora-pdp-qty-btn:hover {
+   background: rgb(30 41 59);
+}
+
+.velmora-pdp-qty-btn:disabled {
+   opacity: 0.5;
+}
+
+.velmora-pdp-qty-input {
+   width: 3rem;
+   text-align: center;
+   padding: 0.55rem 0;
+   background: transparent;
+   border-inline: 1px solid rgb(226 232 240);
+   font-size: 0.875rem;
+   font-weight: 800;
+}
+
+.dark .velmora-pdp-qty-input {
+   border-color: rgb(55 65 81);
+}
+
+.velmora-pdp-btn-cart,
+.velmora-pdp-btn-buy {
+   width: 100%;
+   border-radius: 0.75rem;
+   font-size: 0.9375rem;
+   font-weight: 800;
+   padding: 0.9rem 1rem;
+   transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.velmora-pdp-btn-cart {
+   background: #2563eb;
+   color: #ffffff;
+   box-shadow: 0 4px 12px rgb(37 99 235 / 0.25);
+}
+
+.velmora-pdp-btn-cart:hover {
+   background: #1d4ed8;
+}
+
+.velmora-pdp-btn-cart:disabled,
+.velmora-pdp-btn-buy:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+}
+
+.velmora-pdp-btn-buy {
+   background: #f59e0b;
+   color: #ffffff;
+   border: 2px solid #f59e0b;
+   box-shadow: 0 4px 12px rgb(245 158 11 / 0.22);
+}
+
+.velmora-pdp-btn-buy:hover {
+   background: #d97706;
+   border-color: #d97706;
+}
+
+.velmora-pdp-btn-outline {
+   border-radius: 0.75rem;
+   border: 2px solid #2563eb;
+   color: #2563eb;
+   font-weight: 700;
+   padding: 0.65rem 1rem;
+}
+
+.velmora-pdp-btn-outline:hover {
+   background: #2563eb;
+   color: #ffffff;
+}
+
+.velmora-pdp-offer-tile {
+   display: flex;
+   align-items: flex-start;
+   gap: 0.625rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.85);
+   background: rgb(248 250 252 / 0.8);
+   padding: 0.75rem;
+}
+
+.dark .velmora-pdp-offer-tile {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.45);
+}
+
+.velmora-pdp-offer-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 2rem;
+   height: 2rem;
+   border-radius: 0.5rem;
+   background: rgb(37 99 235 / 0.1);
+   color: #2563eb;
+   flex-shrink: 0;
+}
+
+.velmora-pdp-info-shell {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #ffffff;
+   padding: 1rem 1.125rem;
+   box-shadow: 0 1px 3px rgb(15 23 42 / 0.04);
+}
+
+.dark .velmora-pdp-info-shell {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-pdp-price-hero {
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+   padding: 1rem 1.125rem;
+}
+
+.dark .velmora-pdp-price-hero {
+   border-color: rgb(55 65 81);
+   background: linear-gradient(180deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%);
+}
+
+.velmora-pdp-panel-header {
+   padding: 0.875rem 1.125rem;
+   border-bottom: 1px solid rgb(226 232 240 / 0.9);
+   background: #f8fafc;
+}
+
+.dark .velmora-pdp-panel-header {
+   border-bottom-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.55);
+}
+
+
+.velmora-pdp-rail {
+   display: flex;
+   gap: 0.75rem;
+   overflow-x: auto;
+   scroll-snap-type: x mandatory;
+   scroll-padding-inline: 0.25rem;
+   padding-bottom: 0.5rem;
+   -webkit-overflow-scrolling: touch;
+}
+
+.velmora-pdp-rail::-webkit-scrollbar {
+   height: 6px;
+}
+
+.velmora-pdp-rail::-webkit-scrollbar-thumb {
+   background: rgb(148 163 184 / 0.5);
+   border-radius: 999px;
+}
+
+.velmora-pdp-rail-item {
+   flex: 0 0 auto;
+   width: min(11.5rem, 42vw);
+   scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+   .velmora-pdp-rail-item {
+      width: 13.5rem;
+   }
+}
+
+.velmora-pdp-offer-card {
+   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.velmora-pdp-offer-card:hover {
+   border-color: rgb(37 99 235 / 0.35);
+   box-shadow: 0 2px 8px rgb(15 23 42 / 0.05);
+}
+
+.velmora-pdp-info-panel {
+   min-width: 0;
+}
+
+.velmora-pdp-thumb-rail {
+   scrollbar-width: thin;
+}
+
+/* PDP Experience 2 — unified marketplace top section */
+.velmora-pdp-page {
+   padding-top: 0.75rem !important;
+   padding-bottom: 1.5rem !important;
+}
+
+.velmora-pdp-breadcrumb {
+   margin-bottom: 0.75rem;
+   font-size: 0.8125rem;
+   color: #64748b;
+}
+
+.velmora-pdp-top {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   box-shadow: 0 4px 20px rgb(15 23 42 / 0.06);
+   overflow: hidden;
+}
+
+.dark .velmora-pdp-top {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+   box-shadow: 0 4px 20px rgb(0 0 0 / 0.2);
+}
+
+.velmora-pdp-top-grid {
+   display: grid;
+   gap: 1rem;
+   padding: 1rem;
+   align-items: start;
+}
+
+@media (min-width: 1024px) {
+   .velmora-pdp-top-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 1.25rem;
+      padding: 1.25rem 1.25rem 0.75rem;
+   }
+
+   .velmora-pdp-top-gallery {
+      grid-column: span 5 / span 5;
+   }
+
+   .velmora-pdp-top-info {
+      grid-column: span 4 / span 4;
+   }
+
+   .velmora-pdp-top-buy {
+      grid-column: span 3 / span 3;
+   }
+}
+
+.velmora-pdp-buy-sticky {
+   position: sticky;
+   top: 5.5rem;
+}
+
+.velmora-pdp-mobile-buy {
+   margin-top: 0.75rem;
+}
+
+.velmora-pdp-info-inner {
+   min-width: 0;
+}
+
+.velmora-pdp-info-block {
+   padding-block: 0.15rem;
+}
+
+.velmora-pdp-info-divider {
+   height: 1px;
+   background: rgb(226 232 240 / 0.95);
+   margin-block: 0.75rem;
+}
+
+.dark .velmora-pdp-info-divider {
+   background: rgb(55 65 81);
+}
+
+.velmora-pdp-brand {
+   font-size: 0.6875rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+   color: #2563eb;
+}
+
+.velmora-pdp-category-chips {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.35rem;
+   margin-top: 0.5rem;
+}
+
+.velmora-pdp-category-chip {
+   display: inline-flex;
+   border-radius: 999px;
+   border: 1px solid rgb(226 232 240);
+   background: #f8fafc;
+   color: #64748b;
+   font-size: 0.6875rem;
+   font-weight: 700;
+   padding: 0.2rem 0.55rem;
+}
+
+.velmora-pdp-category-chip:hover {
+   border-color: rgb(37 99 235 / 0.35);
+   color: #2563eb;
+}
+
+.dark .velmora-pdp-category-chip {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59);
+}
+
+.velmora-pdp-meta-chip {
+   border-radius: 0.375rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #f8fafc;
+   font-size: 0.6875rem;
+   color: #64748b;
+   padding: 0.2rem 0.5rem;
+}
+
+.velmora-pdp-meta-chip strong {
+   color: #111827;
+   font-weight: 800;
+}
+
+.velmora-pdp-stock-chip {
+   border-radius: 999px;
+   font-size: 0.625rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   letter-spacing: 0.04em;
+   padding: 0.2rem 0.55rem;
+}
+
+.velmora-pdp-stock-chip.is-in-stock {
+   background: rgb(16 185 129 / 0.12);
+   color: #047857;
+}
+
+.velmora-pdp-stock-chip.is-out-of-stock {
+   background: rgb(100 116 139 / 0.12);
+   color: #64748b;
+}
+
+.velmora-pdp-info-subhead {
+   font-size: 0.8125rem;
+   font-weight: 800;
+   color: #111827;
+   margin-bottom: 0.5rem;
+}
+
+.dark .velmora-pdp-info-subhead {
+   color: #ffffff;
+}
+
+.velmora-pdp-highlight-list {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   display: grid;
+   gap: 0.4rem;
+}
+
+.velmora-pdp-highlight-list li {
+   position: relative;
+   padding-left: 0.9rem;
+   font-size: 0.8125rem;
+   color: #334155;
+   line-height: 1.45;
+}
+
+.dark .velmora-pdp-highlight-list li {
+   color: #e2e8f0;
+}
+
+.velmora-pdp-highlight-list li::before {
+   content: '';
+   position: absolute;
+   left: 0;
+   top: 0.55rem;
+   width: 0.3rem;
+   height: 0.3rem;
+   border-radius: 999px;
+   background: #2563eb;
+}
+
+.velmora-pdp-glance-grid {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.45rem;
+   margin: 0;
+}
+
+.velmora-pdp-glance-item {
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #f8fafc;
+   padding: 0.45rem 0.55rem;
+}
+
+.dark .velmora-pdp-glance-item {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.55);
+}
+
+.velmora-pdp-glance-item dt {
+   font-size: 0.625rem;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.04em;
+   color: #64748b;
+}
+
+.velmora-pdp-glance-item dd {
+   margin: 0.15rem 0 0;
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.dark .velmora-pdp-glance-item dd {
+   color: #ffffff;
+}
+
+.velmora-pdp-price-hero {
+   border: none;
+   background: transparent;
+   padding: 0;
+}
+
+.velmora-pdp-trust-strip {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.5rem;
+   padding: 0.75rem 1rem 1rem;
+   border-top: 1px solid rgb(226 232 240 / 0.95);
+   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+@media (min-width: 768px) {
+   .velmora-pdp-trust-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+      padding: 0.75rem 1.25rem 1rem;
+   }
+}
+
+.dark .velmora-pdp-trust-strip {
+   border-top-color: rgb(55 65 81);
+   background: linear-gradient(180deg, rgb(30 41 59 / 0.45) 0%, rgb(15 23 42) 100%);
+}
+
+.velmora-pdp-trust-chip {
+   display: flex;
+   align-items: flex-start;
+   gap: 0.5rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.85);
+   background: #ffffff;
+   padding: 0.55rem 0.6rem;
+   min-width: 0;
+}
+
+.dark .velmora-pdp-trust-chip {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-pdp-trust-chip-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 1.75rem;
+   height: 1.75rem;
+   border-radius: 0.5rem;
+   background: rgb(37 99 235 / 0.1);
+   color: #2563eb;
+   flex-shrink: 0;
+}
+
+.velmora-pdp-trust-chip-title {
+   margin: 0;
+   font-size: 0.6875rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.25;
+}
+
+.dark .velmora-pdp-trust-chip-title {
+   color: #ffffff;
+}
+
+.velmora-pdp-trust-chip-text {
+   margin: 0.1rem 0 0;
+   font-size: 0.625rem;
+   color: #64748b;
+   line-height: 1.3;
+}
+
+.velmora-pdp-buybox-actionhead {
+   padding: 1rem 1.125rem 0.75rem;
+   border-bottom: 1px solid rgb(226 232 240 / 0.9);
+   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.dark .velmora-pdp-buybox-actionhead {
+   border-bottom-color: rgb(55 65 81);
+   background: linear-gradient(180deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%);
+}
+
+.velmora-pdp-buybox-body {
+   padding: 1rem 1.125rem 1.125rem;
+   display: flex;
+   flex-direction: column;
+   gap: 0.75rem;
+}
+
+.velmora-pdp-buybox-notes {
+   display: flex;
+   flex-direction: column;
+   gap: 0.45rem;
+   padding-top: 0.5rem;
+   border-top: 1px solid rgb(226 232 240 / 0.9);
+}
+
+.dark .velmora-pdp-buybox-notes {
+   border-top-color: rgb(55 65 81);
+}
+
+.velmora-pdp-buybox-notes p {
+   display: flex;
+   align-items: flex-start;
+   gap: 0.4rem;
+   margin: 0;
+   font-size: 0.6875rem;
+   color: #64748b;
+   line-height: 1.4;
+}
+
+.velmora-pdp-buybox-notes svg {
+   color: #2563eb;
+   margin-top: 0.1rem;
+}
+
+.velmora-pdp-below {
+   margin-top: 1rem;
+}
+
+.velmora-pdp-details-shell {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 1rem;
+   box-shadow: 0 1px 3px rgb(15 23 42 / 0.04);
+}
+
+.dark .velmora-pdp-details-shell {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-pdp-details-heading {
+   font-size: 1.0625rem;
+   font-weight: 800;
+   color: #111827;
+   margin-bottom: 0.75rem;
+}
+
+.dark .velmora-pdp-details-heading {
+   color: #ffffff;
+}
+
+.velmora-pdp-details-grid {
+   display: grid;
+   gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+   .velmora-pdp-details-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 1rem;
+   }
+}
+
+.velmora-pdp-details-column {
+   display: flex;
+   flex-direction: column;
+   gap: 0.75rem;
+   min-width: 0;
+}
+
+.velmora-pdp-details-card {
+   border-radius: 0.75rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #f8fafc;
+   padding: 0.875rem;
+}
+
+.dark .velmora-pdp-details-card {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.45);
+}
+
+.velmora-pdp-details-title {
+   font-size: 0.875rem;
+   font-weight: 800;
+   color: #111827;
+   margin-bottom: 0.5rem;
+}
+
+.dark .velmora-pdp-details-title {
+   color: #ffffff;
+}
+
+.velmora-pdp-details-prose {
+   font-size: 0.8125rem;
+   color: #64748b;
+   line-height: 1.55;
+   white-space: pre-line;
+}
+
+.velmora-pdp-spec-list {
+   margin: 0;
+}
+
+.velmora-pdp-spec-row {
+   display: grid;
+   grid-template-columns: minmax(0, 38%) 1fr;
+   gap: 0.5rem;
+   padding: 0.45rem 0;
+   border-bottom: 1px solid rgb(226 232 240 / 0.7);
+   font-size: 0.8125rem;
+}
+
+.velmora-pdp-spec-row:last-child {
+   border-bottom: none;
+   padding-bottom: 0;
+}
+
+.velmora-pdp-spec-row dt {
+   color: #64748b;
+   font-weight: 600;
+}
+
+.velmora-pdp-spec-row dd {
+   margin: 0;
+   color: #111827;
+   font-weight: 700;
+}
+
+.dark .velmora-pdp-spec-row dd {
+   color: #ffffff;
+}
+
+.velmora-pdp-variant-table th,
+.velmora-pdp-variant-table td {
+   padding: 0.5rem 0.65rem;
+   text-align: start;
+   border-bottom: 1px solid rgb(226 232 240 / 0.7);
+}
+
+.velmora-pdp-variant-table thead {
+   background: rgb(248 250 252);
+   color: #64748b;
+   font-size: 0.75rem;
+}
+
+.velmora-pdp-gallery-shell {
+   border: none;
+   background: transparent;
+   box-shadow: none;
+   padding: 0;
+}
+
+.velmora-pdp-info-shell {
+   border: none;
+   background: transparent;
+   padding: 0;
+   box-shadow: none;
+}
+
+.velmora-checkout-step {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 0.5rem;
+   min-width: 0;
+   flex: 1;
+   text-align: center;
+}
+
+.velmora-checkout-step-dot {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 2rem;
+   height: 2rem;
+   border-radius: 9999px;
+   font-size: 0.75rem;
+   font-weight: 700;
+   border: 2px solid rgb(226 232 240);
+   color: #64748b;
+   background: #ffffff;
+   transition: all 0.2s ease;
+}
+
+.velmora-checkout-step.is-active .velmora-checkout-step-dot {
+   border-color: #2563eb;
+   background: #2563eb;
+   color: #ffffff;
+}
+
+.velmora-checkout-step.is-complete .velmora-checkout-step-dot {
+   border-color: #2563eb;
+   background: #eff6ff;
+   color: #2563eb;
+}
+
+.velmora-cart-line-media {
+   width: 5.5rem;
+   height: 5.5rem;
+   flex-shrink: 0;
+   border-radius: 0.75rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+   overflow: hidden;
+}
+
+.dark .velmora-cart-line-media {
+   border-color: rgb(55 65 81);
+   background: linear-gradient(180deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%);
+}
+
+.velmora-cart-line-media img {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   padding: 0.5rem;
+}
+
+.velmora-order-summary {
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 1rem;
+   background: #ffffff;
+   box-shadow: 0 4px 16px rgb(15 23 42 / 0.06);
+}
+
+.dark .velmora-order-summary {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-method-option.is-selected {
+   border-color: #2563eb;
+   background: rgb(37 99 235 / 0.05);
+   box-shadow: 0 0 0 1px rgb(37 99 235 / 0.15);
+}
+
+.velmora-form-field {
+   display: block;
+   width: 100%;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240);
+   background: #ffffff;
+   padding: 0.625rem 0.875rem;
+   font-size: 0.875rem;
+   color: #111827;
+   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.velmora-form-field:focus {
+   outline: none;
+   border-color: #2563eb;
+   box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+}
+
+.dark .velmora-form-field {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59);
+   color: #ffffff;
+}
+
+/* VELMORA premium page layout system */
+.velmora-page-shell {
+   background: #f8fafc;
+   padding-bottom: 3rem;
+}
+
+.dark .velmora-page-shell {
+   background: rgb(2 6 23);
+}
+
+.velmora-container {
+   width: 100%;
+   max-width: 1280px;
+   margin-inline: auto;
+   padding-inline: 1rem;
+}
+
+.velmora-page-header {
+   margin-bottom: 1.5rem;
+}
+
+.velmora-page-title {
+   font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+   font-weight: 700;
+   color: #111827;
+   line-height: 1.2;
+}
+
+.dark .velmora-page-title {
+   color: #ffffff;
+}
+
+.velmora-page-subtitle {
+   margin-top: 0.375rem;
+   font-size: 0.875rem;
+   color: #64748b;
+   line-height: 1.5;
+}
+
+.velmora-home-discovery {
+   padding-top: 0.5rem;
+   padding-bottom: 1.5rem;
+}
+
+.velmora-home-rail {
+   padding-top: 0.25rem;
+   padding-bottom: 0.25rem;
+}
+
+.velmora-btn-primary {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0.5rem;
+   background: #2563eb;
+   color: #ffffff;
+   font-size: 0.875rem;
+   font-weight: 600;
+   padding: 0.625rem 1.25rem;
+   transition: background-color 0.15s ease;
+}
+
+.velmora-btn-primary:hover {
+   background: #1d4ed8;
+}
+
+.velmora-btn-accent {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0.5rem;
+   background: #f59e0b;
+   color: #ffffff;
+   font-size: 0.875rem;
+   font-weight: 600;
+   padding: 0.625rem 1.25rem;
+   transition: background-color 0.15s ease;
+}
+
+.velmora-btn-accent:hover {
+   background: #d97706;
+}
+
+.velmora-btn-outline-light {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(255 255 255 / 0.35);
+   color: #ffffff;
+   font-size: 0.875rem;
+   font-weight: 600;
+   padding: 0.625rem 1.25rem;
+   transition: background-color 0.15s ease;
+}
+
+.velmora-btn-outline-light:hover {
+   background: rgb(255 255 255 / 0.1);
+}
+
+.velmora-special-page {
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   padding: 2rem 1rem;
+   background: linear-gradient(160deg, #111827 0%, #1e3a8a 48%, #2563eb 100%);
+}
+
+.velmora-footer {
+   margin-top: 3rem;
+   background: #0b1220;
+   border-top: 1px solid rgb(37 99 235 / 0.35);
+}
+
+.velmora-footer-link {
+   color: rgb(203 213 225);
+   font-size: 0.875rem;
+   transition: color 0.15s ease;
+}
+
+.velmora-footer-link:hover {
+   color: #ffffff;
+}
+
+.velmora-footer-heading {
+   font-size: 0.75rem;
+   font-weight: 700;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   color: #ffffff;
+}
+
+/* Categories landing page */
+.velmora-categories-page {
+   background: #f8fafc;
+   min-height: 60vh;
+}
+
+.dark .velmora-categories-page {
+   background: rgb(2 6 23);
+}
+
+.velmora-categories-hero {
+   padding-top: 1.25rem;
+   padding-bottom: 1rem;
+}
+
+.velmora-categories-hero-inner {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 1.25rem 1.5rem;
+   box-shadow: 0 4px 18px rgb(15 23 42 / 0.04);
+}
+
+.dark .velmora-categories-hero-inner {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-categories-kicker {
+   display: inline-flex;
+   border-radius: 999px;
+   background: rgb(37 99 235 / 0.08);
+   color: #2563eb;
+   font-size: 0.625rem;
+   font-weight: 800;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   padding: 0.2rem 0.55rem;
+   margin-bottom: 0.4rem;
+}
+
+.velmora-categories-hero-title {
+   font-size: clamp(1.5rem, 3vw, 2rem);
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.2;
+}
+
+.dark .velmora-categories-hero-title {
+   color: #ffffff;
+}
+
+.velmora-categories-hero-desc {
+   margin-top: 0.4rem;
+   font-size: 0.875rem;
+   color: #64748b;
+   max-width: 40rem;
+   line-height: 1.5;
+}
+
+.velmora-categories-section-head {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 0.75rem;
+}
+
+.velmora-categories-section-title {
+   font-size: 1.125rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.25;
+}
+
+.dark .velmora-categories-section-title {
+   color: #ffffff;
+}
+
+.velmora-categories-section-desc {
+   margin-top: 0.25rem;
+   font-size: 0.8125rem;
+   color: #64748b;
+   line-height: 1.45;
+}
+
+.velmora-categories-root-grid {
+   display: grid;
+   grid-template-columns: minmax(0, 1fr);
+   gap: 1rem;
+}
+
+@media (min-width: 640px) {
+   .velmora-categories-root-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+   }
+}
+
+@media (min-width: 1024px) {
+   .velmora-categories-root-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.125rem;
+   }
+}
+
+.velmora-categories-root-card {
+   display: flex;
+   flex-direction: column;
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   overflow: hidden;
+   box-shadow: 0 2px 10px rgb(15 23 42 / 0.04);
+   transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.velmora-categories-root-card:hover {
+   border-color: rgb(37 99 235 / 0.28);
+   box-shadow: 0 8px 22px rgb(15 23 42 / 0.08);
+}
+
+.dark .velmora-categories-root-card {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-categories-root-media {
+   position: relative;
+   display: block;
+   height: 11rem;
+   overflow: hidden;
+   background: #f8fafc;
+}
+
+.velmora-categories-root-body {
+   display: flex;
+   flex-direction: column;
+   gap: 0.65rem;
+   padding: 0.875rem;
+   flex: 1;
+}
+
+.velmora-categories-root-desc {
+   font-size: 0.8125rem;
+   color: #64748b;
+   line-height: 1.45;
+   margin: 0;
+}
+
+.velmora-categories-root-meta {
+   font-size: 0.6875rem;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   color: #f59e0b;
+   margin: 0;
+}
+
+.velmora-categories-chip-rail {
+   display: flex;
+   gap: 0.5rem;
+   overflow-x: auto;
+   padding-bottom: 0.15rem;
+   scroll-snap-type: x mandatory;
+   -webkit-overflow-scrolling: touch;
+   scrollbar-width: thin;
+}
+
+.velmora-categories-chip {
+   flex: 0 0 auto;
+   max-width: 9.5rem;
+   scroll-snap-align: start;
+   display: flex;
+   flex-direction: column;
+   gap: 0.1rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #f8fafc;
+   padding: 0.45rem 0.6rem;
+   transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.velmora-categories-chip:hover {
+   border-color: rgb(37 99 235 / 0.35);
+   background: rgb(37 99 235 / 0.06);
+}
+
+.dark .velmora-categories-chip {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59);
+}
+
+.velmora-categories-chip-label {
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #111827;
+   line-height: 1.25;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.dark .velmora-categories-chip-label {
+   color: #ffffff;
+}
+
+.velmora-categories-chip-meta {
+   font-size: 0.625rem;
+   font-weight: 600;
+   color: #64748b;
+   white-space: nowrap;
+}
+
+.velmora-categories-root-cta {
+   margin-top: auto;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   border-radius: 0.5rem;
+   background: #2563eb;
+   color: #ffffff;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   padding: 0.55rem 0.75rem;
+   transition: background-color 0.15s ease;
+}
+
+.velmora-categories-root-cta:hover {
+   background: #1d4ed8;
+}
+
+.velmora-categories-department {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 1rem;
+   box-shadow: 0 1px 3px rgb(15 23 42 / 0.04);
+}
+
+.dark .velmora-categories-department {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-categories-department-head {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 0.75rem;
+   margin-bottom: 0.75rem;
+}
+
+.velmora-categories-department-title {
+   font-size: 1rem;
+   font-weight: 800;
+   color: #111827;
+}
+
+.dark .velmora-categories-department-title {
+   color: #ffffff;
+}
+
+.velmora-categories-department-desc {
+   font-size: 0.75rem;
+   color: #64748b;
+   margin-top: 0.15rem;
+}
+
+.velmora-categories-department-link {
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #2563eb;
+   white-space: nowrap;
+}
+
+.velmora-categories-department-link:hover {
+   text-decoration: underline;
+}
+
+.velmora-categories-child-grid {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.65rem;
+}
+
+@media (min-width: 640px) {
+   .velmora-categories-child-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+   }
+}
+
+@media (min-width: 1024px) {
+   .velmora-categories-child-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+   }
+}
+
+.velmora-categories-child-card {
+   display: flex;
+   align-items: center;
+   gap: 0.55rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #f8fafc;
+   padding: 0.5rem;
+   min-width: 0;
+   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.velmora-categories-child-card:hover {
+   border-color: rgb(37 99 235 / 0.3);
+   box-shadow: 0 2px 8px rgb(15 23 42 / 0.05);
+}
+
+.dark .velmora-categories-child-card {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.55);
+}
+
+.velmora-categories-child-thumb {
+   width: 2.25rem;
+   height: 2.25rem;
+   border-radius: 0.5rem;
+   overflow: hidden;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.velmora-categories-child-name {
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+   line-height: 1.25;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.dark .velmora-categories-child-name {
+   color: #ffffff;
+}
+
+.velmora-categories-child-meta {
+   font-size: 0.625rem;
+   color: #64748b;
+   line-height: 1.3;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.velmora-categories-popular-grid {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.65rem;
+}
+
+@media (min-width: 640px) {
+   .velmora-categories-popular-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+   }
+}
+
+@media (min-width: 1024px) {
+   .velmora-categories-popular-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+   }
+}
+
+.velmora-categories-popular-card {
+   display: flex;
+   align-items: center;
+   gap: 0.55rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #ffffff;
+   padding: 0.55rem;
+   min-width: 0;
+}
+
+.dark .velmora-categories-popular-card {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-categories-popular-thumb {
+   width: 2rem;
+   height: 2rem;
+   border-radius: 0.45rem;
+   overflow: hidden;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.velmora-categories-popular-name {
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #111827;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.dark .velmora-categories-popular-name {
+   color: #ffffff;
+}
+
+.velmora-categories-popular-meta {
+   font-size: 0.625rem;
+   color: #64748b;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.velmora-categories-cta {
+   border-radius: 1rem;
+   border: 1px solid rgb(37 99 235 / 0.2);
+   background: linear-gradient(135deg, #111827 0%, #1e3a8a 55%, #2563eb 100%);
+   overflow: hidden;
+}
+
+.velmora-categories-cta-inner {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+   padding: 1.25rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+   .velmora-categories-cta-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+   }
+}
+
+.velmora-categories-cta-title {
+   font-size: 1.125rem;
+   font-weight: 800;
+   color: #ffffff;
+}
+
+.velmora-categories-cta-desc {
+   margin-top: 0.35rem;
+   font-size: 0.8125rem;
+   color: rgb(255 255 255 / 0.82);
+   max-width: 32rem;
+}
+
+.velmora-categories-cta-btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0.5rem;
+   background: #f59e0b;
+   color: #111827;
+   font-size: 0.875rem;
+   font-weight: 800;
+   padding: 0.65rem 1.1rem;
+   white-space: nowrap;
+   transition: background-color 0.15s ease;
+}
+
+.velmora-categories-cta-btn:hover {
+   background: #d97706;
+   color: #ffffff;
+}
+
+.velmora-shop-empty-link {
+   border-radius: 0.5rem;
+   background: #ffffff;
+   color: #2563eb;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   padding: 0.55rem 1rem;
+   border: 1px solid rgb(37 99 235 / 0.25);
+   display: inline-flex;
+   align-items: center;
+   gap: 0.35rem;
+}
+
+/* Shop page + navigation polish */
+.velmora-shop-page {
+   background: #f8fafc;
+}
+
+.dark .velmora-shop-page {
+   background: rgb(2 6 23);
+}
+
+.velmora-shop-container {
+   padding-top: 1rem;
+   padding-bottom: 2.5rem;
+}
+
+.velmora-nav-category-bar {
+   display: flex;
+   align-items: center;
+   gap: 0.15rem;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   overflow: visible;
+}
+
+.velmora-header-main,
+.velmora-header-topbar {
+   overflow: visible;
+}
+
+.velmora-header-mobile-menu {
+   position: relative;
+   z-index: 100;
+}
+
+.velmora-header-categories {
+   position: relative;
+   z-index: 2;
+   overflow: hidden;
+}
+
+.velmora-cat-icon-nav {
+   --velmora-cat-icon-size: 1.75rem;
+   --velmora-cat-nav-row-height: var(--velmora-cat-nav-height, 5.25rem);
+   min-height: var(--velmora-cat-nav-row-height);
+   transition: min-height 0.2s ease;
+   contain: layout style;
+}
+
+.velmora-cat-icon-nav.is-compact {
+   --velmora-cat-icon-size: 0;
+}
+
+.velmora-cat-icon-nav__scroll {
+   display: flex;
+   align-items: stretch;
+   gap: 0.15rem;
+   overflow-x: auto;
+   overflow-y: hidden;
+   padding: 0 0.5rem;
+   min-height: var(--velmora-cat-nav-row-height);
+   transition: min-height 0.22s ease;
+}
+
+@media (min-width: 1024px) {
+   .velmora-cat-icon-nav__scroll {
+      justify-content: center;
+      gap: 0.25rem;
+      padding-inline: 1rem;
+   }
+}
+
+.velmora-cat-icon-nav__item {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: flex-end;
+   gap: 0.35rem;
+   flex: 0 0 auto;
+   min-width: 4.5rem;
+   max-width: 6.5rem;
+   padding: 0.45rem 0.5rem 0.35rem;
+   text-align: center;
+   color: #334155;
+   border-bottom: 2px solid transparent;
+   transition: color 0.15s ease, border-color 0.15s ease, padding 0.22s ease;
+}
+
+.velmora-cat-icon-nav.is-compact .velmora-cat-icon-nav__item {
+   justify-content: center;
+   gap: 0;
+   padding-block: 0.5rem 0.4rem;
+   min-width: 4rem;
+}
+
+.dark .velmora-cat-icon-nav__item {
+   color: #cbd5e1;
+}
+
+.velmora-cat-icon-nav__item:hover,
+.velmora-cat-icon-nav__item.is-active {
+   color: #2563eb;
+   border-bottom-color: #2563eb;
+}
+
+.velmora-cat-icon-nav__icon-wrap {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: var(--velmora-cat-icon-size);
+   height: var(--velmora-cat-icon-size);
+   max-height: 2rem;
+   overflow: hidden;
+   opacity: 1;
+   transform: translateY(0);
+   transition:
+      opacity 0.2s ease,
+      max-height 0.22s ease,
+      width 0.22s ease,
+      height 0.22s ease,
+      transform 0.22s ease;
+}
+
+.velmora-cat-icon-nav__icon-wrap.is-hidden {
+   opacity: 0;
+   max-height: 0;
+   width: 0;
+   height: 0;
+   transform: translateY(-4px);
+   pointer-events: none;
+}
+
+.velmora-cat-icon-nav__icon {
+   width: 1.625rem;
+   height: 1.625rem;
+   flex-shrink: 0;
+}
+
+.velmora-cat-icon-nav.is-compact .velmora-cat-icon-nav__icon {
+   width: 0;
+   height: 0;
+}
+
+.velmora-cat-icon-nav__image {
+   width: 1.75rem;
+   height: 1.75rem;
+   object-fit: contain;
+   border-radius: 0.35rem;
+}
+
+.velmora-cat-icon-nav__label {
+   display: block;
+   font-size: 0.8125rem;
+   font-weight: 600;
+   line-height: 1.2;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   max-width: 100%;
+}
+
+.velmora-cat-icon-nav.is-compact .velmora-cat-icon-nav__label {
+   font-size: 0.8125rem;
+}
+
+@media (max-width: 639px) {
+   .velmora-cat-icon-nav__item {
+      min-width: 4.25rem;
+      padding-inline: 0.35rem;
+   }
+
+   .velmora-cat-icon-nav__label {
+      font-size: 0.75rem;
+   }
+}
+
+.velmora-nav-category-bar > li {
+   position: relative;
+   flex-shrink: 0;
+}
+
+.velmora-nav-category-bar > li:hover,
+.velmora-nav-category-bar > li:focus-within {
+   z-index: 110;
+}
+
+.velmora-nav-category-link {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.25rem;
+   padding: 0.625rem 0.875rem;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+   white-space: nowrap;
+   border-bottom: 2px solid transparent;
+   transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.dark .velmora-nav-category-link {
+   color: #e2e8f0;
+}
+
+.velmora-nav-category-link:hover,
+.velmora-nav-category-link.is-active {
+   color: #2563eb;
+   border-bottom-color: #2563eb;
+}
+
+.velmora-nav-mega-wrap,
+.velmora-nav-dept-wrap {
+   position: relative;
+}
+
+.velmora-nav-mega-wrap.is-open {
+   z-index: 110;
+}
+
+.velmora-nav-mega-bridge {
+   position: absolute;
+   left: 50%;
+   top: 100%;
+   width: 100vw;
+   height: 0.625rem;
+   transform: translateX(-50%);
+   pointer-events: none;
+   background: transparent;
+}
+
+.velmora-nav-mega-wrap.is-open .velmora-nav-mega-bridge {
+   pointer-events: auto;
+}
+
+.velmora-nav-mega-panel {
+   position: absolute;
+   left: 50%;
+   top: 100%;
+   z-index: 100;
+   display: none;
+   width: 100vw;
+   transform: translateX(-50%);
+   justify-content: center;
+   padding: 0 1rem;
+   pointer-events: none;
+}
+
+.velmora-nav-mega-panel.is-open {
+   display: flex;
+   pointer-events: auto;
+}
+
+.velmora-nav-dept-panel {
+   position: absolute;
+   left: 0;
+   top: 100%;
+   z-index: 100;
+   display: none;
+   padding-top: 0;
+   min-width: 14rem;
+   pointer-events: none;
+}
+
+.velmora-nav-dept-wrap:hover .velmora-nav-dept-panel,
+.velmora-nav-dept-wrap:focus-within .velmora-nav-dept-panel {
+   display: block;
+   pointer-events: auto;
+}
+
+/* Professional All Categories mega menu */
+.velmora-mega {
+   width: min(75rem, calc(100vw - 2rem));
+   max-height: 32.5rem;
+   display: flex;
+   flex-direction: column;
+   border-radius: 0 0 0.875rem 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-top: none;
+   background: #ffffff;
+   box-shadow: 0 16px 40px rgb(15 23 42 / 0.14);
+   pointer-events: auto;
+   overflow: hidden;
+}
+
+.dark .velmora-mega {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-mega__header {
+   display: flex;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 1rem;
+   padding: 0.75rem 1rem 0.65rem;
+   border-bottom: 1px solid rgb(226 232 240 / 0.9);
+   flex-shrink: 0;
+}
+
+.dark .velmora-mega__header {
+   border-bottom-color: rgb(55 65 81);
+}
+
+.velmora-mega__header-title {
+   margin: 0;
+   font-size: 0.9375rem;
+   font-weight: 800;
+   line-height: 1.2;
+   color: #111827;
+}
+
+.dark .velmora-mega__header-title {
+   color: #ffffff;
+}
+
+.velmora-mega__header-sub {
+   margin: 0.2rem 0 0;
+   font-size: 0.75rem;
+   font-weight: 500;
+   line-height: 1.35;
+   color: #64748b;
+}
+
+.velmora-mega__header-link {
+   flex-shrink: 0;
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+   white-space: nowrap;
+   padding-top: 0.15rem;
+}
+
+.velmora-mega__header-link:hover {
+   text-decoration: underline;
+}
+
+.velmora-mega__body {
+   display: grid;
+   grid-template-columns: 15.625rem minmax(0, 1fr) 18.75rem;
+   gap: 0;
+   min-height: 0;
+   flex: 1 1 auto;
+   overflow: hidden;
+}
+
+.velmora-mega__section-label {
+   margin: 0 0 0.45rem;
+   font-size: 0.625rem;
+   font-weight: 800;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   color: #94a3b8;
+}
+
+.velmora-mega__rail {
+   border-right: 1px solid rgb(226 232 240 / 0.9);
+   padding: 0.65rem 0.5rem 0.65rem 0.75rem;
+   overflow-y: auto;
+   min-height: 0;
+}
+
+.dark .velmora-mega__rail {
+   border-right-color: rgb(55 65 81);
+}
+
+.velmora-mega__dept-list {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+   gap: 0.15rem;
+}
+
+.velmora-mega__dept-row {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   width: 100%;
+   min-height: 3rem;
+   padding: 0.35rem 0.45rem;
+   border-radius: 0.5rem;
+   border: 1px solid transparent;
+   text-align: left;
+   background: transparent;
+   cursor: pointer;
+   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.velmora-mega__dept-row:hover,
+.velmora-mega__dept-row.is-active {
+   background: rgb(37 99 235 / 0.08);
+   border-color: rgb(37 99 235 / 0.18);
+}
+
+.velmora-mega__dept-row.is-active .velmora-mega__dept-name {
+   color: #2563eb;
+}
+
+.velmora-mega__dept-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 1.75rem;
+   height: 1.75rem;
+   border-radius: 0.45rem;
+   flex-shrink: 0;
+   color: #ffffff;
+}
+
+.velmora-mega__dept-icon--rose {
+   background: linear-gradient(135deg, #f43f5e, #be123c);
+}
+
+.velmora-mega__dept-icon--sky {
+   background: linear-gradient(135deg, #0ea5e9, #1d4ed8);
+}
+
+.velmora-mega__dept-icon--emerald {
+   background: linear-gradient(135deg, #10b981, #047857);
+}
+
+.velmora-mega__dept-icon--amber {
+   background: linear-gradient(135deg, #f59e0b, #b45309);
+}
+
+.velmora-mega__dept-icon--violet {
+   background: linear-gradient(135deg, #8b5cf6, #5b21b6);
+}
+
+.velmora-mega__dept-icon--slate {
+   background: linear-gradient(135deg, #64748b, #1e293b);
+}
+
+.velmora-mega__dept-icon--pink {
+   background: linear-gradient(135deg, #ec4899, #9d174d);
+}
+
+.velmora-mega__dept-icon--cyan {
+   background: linear-gradient(135deg, #06b6d4, #0e7490);
+}
+
+.velmora-mega__dept-icon--lime {
+   background: linear-gradient(135deg, #84cc16, #4d7c0f);
+}
+
+.velmora-mega__dept-icon--indigo {
+   background: linear-gradient(135deg, #6366f1, #312e81);
+}
+
+.velmora-mega__dept-icon--blue {
+   background: linear-gradient(135deg, #2563eb, #1e3a8a);
+}
+
+.velmora-mega__dept-copy {
+   display: flex;
+   flex-direction: column;
+   gap: 0.05rem;
+   min-width: 0;
+}
+
+.velmora-mega__dept-name {
+   font-size: 0.8125rem;
+   font-weight: 700;
+   line-height: 1.2;
+   color: #1e293b;
+}
+
+.dark .velmora-mega__dept-name {
+   color: #e2e8f0;
+}
+
+.velmora-mega__dept-meta {
+   font-size: 0.6875rem;
+   font-weight: 600;
+   color: #94a3b8;
+}
+
+.velmora-mega__main {
+   min-width: 0;
+   min-height: 0;
+   overflow-y: auto;
+   padding: 0.65rem 0.85rem;
+}
+
+.velmora-mega__details-empty {
+   font-size: 0.8125rem;
+   color: #64748b;
+   padding: 0.5rem 0;
+}
+
+.velmora-mega__details-head {
+   display: flex;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 0.75rem;
+   margin-bottom: 0.55rem;
+}
+
+.velmora-mega__details-kicker {
+   margin: 0;
+   font-size: 0.875rem;
+   font-weight: 800;
+   line-height: 1.25;
+   color: #111827;
+}
+
+.dark .velmora-mega__details-kicker {
+   color: #ffffff;
+}
+
+.velmora-mega__details-desc {
+   margin: 0.15rem 0 0;
+   font-size: 0.75rem;
+   font-weight: 500;
+   color: #64748b;
+   line-height: 1.35;
+}
+
+.velmora-mega__details-cta {
+   flex-shrink: 0;
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+   white-space: nowrap;
+}
+
+.velmora-mega__details-cta:hover {
+   text-decoration: underline;
+}
+
+.velmora-mega__child-list {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 0.35rem 0.65rem;
+}
+
+@media (min-width: 1280px) {
+   .velmora-mega__child-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+   }
+}
+
+.velmora-mega__child-item {
+   border-radius: 0.45rem;
+   border: 1px solid rgb(226 232 240 / 0.85);
+   background: #f8fafc;
+   padding: 0.4rem 0.5rem;
+   min-width: 0;
+}
+
+.dark .velmora-mega__child-item {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.45);
+}
+
+.velmora-mega__child-link {
+   display: block;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+   line-height: 1.25;
+}
+
+.dark .velmora-mega__child-link {
+   color: #f8fafc;
+}
+
+.velmora-mega__child-link:hover {
+   color: #2563eb;
+}
+
+.velmora-mega__grandchild-line {
+   margin: 0.2rem 0 0;
+   font-size: 0.6875rem;
+   line-height: 1.35;
+}
+
+.velmora-mega__grandchild-link {
+   color: #64748b;
+   font-weight: 600;
+}
+
+.velmora-mega__grandchild-link:hover {
+   color: #2563eb;
+}
+
+.velmora-mega__grandchild-sep {
+   color: #94a3b8;
+}
+
+.velmora-mega__browse-card {
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: linear-gradient(135deg, rgb(37 99 235 / 0.06), rgb(37 99 235 / 0.02));
+   padding: 0.75rem 0.85rem;
+}
+
+.dark .velmora-mega__browse-card {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59 / 0.55);
+}
+
+.velmora-mega__browse-title {
+   margin: 0;
+   font-size: 0.8125rem;
+   font-weight: 800;
+   color: #111827;
+}
+
+.dark .velmora-mega__browse-title {
+   color: #ffffff;
+}
+
+.velmora-mega__browse-desc {
+   margin: 0.25rem 0 0;
+   font-size: 0.75rem;
+   color: #64748b;
+   line-height: 1.35;
+}
+
+.velmora-mega__browse-btn {
+   display: inline-block;
+   margin-top: 0.5rem;
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+}
+
+.velmora-mega__browse-btn:hover {
+   text-decoration: underline;
+}
+
+.velmora-mega__shortcuts {
+   border-left: 1px solid rgb(226 232 240 / 0.9);
+   padding: 0.65rem 0.75rem 0.65rem 0.65rem;
+   overflow-y: auto;
+   min-height: 0;
+}
+
+.dark .velmora-mega__shortcuts {
+   border-left-color: rgb(55 65 81);
+}
+
+.velmora-mega__shortcut-list {
+   display: flex;
+   flex-direction: column;
+   gap: 0.4rem;
+}
+
+.velmora-mega__shortcut {
+   display: grid;
+   grid-template-columns: auto 1fr auto;
+   align-items: center;
+   gap: 0.5rem;
+   min-height: 5rem;
+   max-height: 6rem;
+   padding: 0.5rem 0.55rem;
+   border-radius: 0.5rem;
+   border: 1px solid transparent;
+   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.velmora-mega__shortcut:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgb(15 23 42 / 0.08);
+}
+
+.velmora-mega__shortcut--amber {
+   background: linear-gradient(135deg, rgb(245 158 11 / 0.16), rgb(245 158 11 / 0.05));
+   border-color: rgb(245 158 11 / 0.28);
+}
+
+.velmora-mega__shortcut--blue {
+   background: linear-gradient(135deg, rgb(37 99 235 / 0.16), rgb(37 99 235 / 0.05));
+   border-color: rgb(37 99 235 / 0.24);
+}
+
+.velmora-mega__shortcut--slate {
+   background: linear-gradient(135deg, rgb(15 23 42 / 0.09), rgb(15 23 42 / 0.03));
+   border-color: rgb(15 23 42 / 0.14);
+}
+
+.velmora-mega__shortcut-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 1.75rem;
+   height: 1.75rem;
+   border-radius: 0.45rem;
+   background: rgb(255 255 255 / 0.75);
+   color: #2563eb;
+   flex-shrink: 0;
+}
+
+.dark .velmora-mega__shortcut-icon {
+   background: rgb(30 41 59 / 0.8);
+}
+
+.velmora-mega__shortcut-copy {
+   display: flex;
+   flex-direction: column;
+   gap: 0.1rem;
+   min-width: 0;
+}
+
+.velmora-mega__shortcut-title {
+   font-size: 0.8125rem;
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.2;
+}
+
+.dark .velmora-mega__shortcut-title {
+   color: #ffffff;
+}
+
+.velmora-mega__shortcut-sub {
+   font-size: 0.6875rem;
+   color: #64748b;
+   line-height: 1.3;
+}
+
+.velmora-mega__shortcut-action {
+   font-size: 0.6875rem;
+   font-weight: 700;
+   color: #2563eb;
+   white-space: nowrap;
+}
+
+.velmora-mega__footer {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.35rem 1rem;
+   padding: 0.55rem 1rem 0.65rem;
+   border-top: 1px solid rgb(226 232 240 / 0.9);
+   flex-shrink: 0;
+}
+
+.dark .velmora-mega__footer {
+   border-top-color: rgb(55 65 81);
+}
+
+.velmora-mega__footer-link {
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+}
+
+.velmora-mega__footer-link:hover {
+   text-decoration: underline;
+}
+.velmora-nav-mobile-quick-links {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.35rem;
+   margin-top: 0.65rem;
+   padding-top: 0.55rem;
+   border-top: 1px solid rgb(226 232 240 / 0.9);
+}
+
+.velmora-nav-mobile-quick-link {
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+   padding: 0.25rem 0.35rem;
+}
+
+.velmora-nav-dept-inner {
+   border-radius: 0.75rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   box-shadow: 0 12px 32px rgb(15 23 42 / 0.14);
+   padding: 0.75rem;
+   min-width: 12rem;
+   pointer-events: auto;
+}
+
+.dark .velmora-nav-dept-inner {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-nav-dept-title {
+   font-size: 0.6875rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   letter-spacing: 0.06em;
+   color: #64748b;
+   margin-bottom: 0.5rem;
+}
+
+.velmora-nav-dept-list {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+.velmora-nav-dept-link {
+   display: block;
+   font-size: 0.8125rem;
+   font-weight: 600;
+   color: #111827;
+   padding: 0.35rem 0.5rem;
+   border-radius: 0.375rem;
+}
+
+.dark .velmora-nav-dept-link {
+   color: #e2e8f0;
+}
+
+.velmora-nav-dept-link:hover {
+   background: #f8fafc;
+   color: #2563eb;
+}
+
+.velmora-nav-dept-all {
+   display: block;
+   margin-top: 0.5rem;
+   padding-top: 0.5rem;
+   border-top: 1px solid rgb(226 232 240 / 0.9);
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+}
+
+.velmora-nav-mobile-pill {
+   display: flex;
+   align-items: center;
+   gap: 0.35rem;
+   width: 100%;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #f8fafc;
+   padding: 0.65rem 0.75rem;
+   font-size: 0.875rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.dark .velmora-nav-mobile-pill {
+   border-color: rgb(55 65 81);
+   background: rgb(30 41 59);
+   color: #ffffff;
+}
+
+.velmora-nav-mobile-acc-list {
+   list-style: none;
+   margin: 0;
+   padding: 0.25rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #ffffff;
+}
+
+.velmora-nav-mobile-acc-link {
+   display: block;
+   padding: 0.4rem 0.5rem;
+   font-size: 0.8125rem;
+   font-weight: 600;
+   color: #475569;
+   border-radius: 0.375rem;
+}
+
+.velmora-nav-mobile-acc-link.is-root {
+   font-weight: 800;
+   color: #111827;
+}
+
+.velmora-nav-mobile-acc-toggle {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 1.75rem;
+   height: 1.75rem;
+   border-radius: 0.375rem;
+   color: #64748b;
+}
+
+.velmora-shop-toolbar {
+   position: relative;
+   overflow: hidden;
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   box-shadow: 0 2px 10px rgb(15 23 42 / 0.04);
+   padding: 1rem 1.25rem;
+   margin-bottom: 0.75rem;
+}
+
+.velmora-shop-toolbar--cover {
+   border-color: rgb(15 23 42 / 0.2);
+   min-height: 11.5rem;
+   padding: 1.25rem 1.25rem 1.125rem;
+   box-shadow: 0 12px 32px rgb(15 23 42 / 0.12);
+}
+
+.velmora-shop-toolbar-bg {
+   position: absolute;
+   inset: 0;
+   background-image: var(--velmora-shop-cover-image);
+   background-size: cover;
+   background-position: center;
+}
+
+.velmora-shop-toolbar-overlay {
+   position: absolute;
+   inset: 0;
+   background: linear-gradient(
+      105deg,
+      rgb(17 24 39 / 0.88) 0%,
+      rgb(17 24 39 / 0.62) 42%,
+      rgb(17 24 39 / 0.2) 100%
+   );
+}
+
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-main {
+   position: relative;
+   z-index: 1;
+}
+
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-kicker {
+   color: #f59e0b;
+}
+
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-title,
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-count,
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-context {
+   color: #ffffff;
+}
+
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-meta,
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-lead {
+   color: rgb(255 255 255 / 0.88);
+}
+
+.velmora-shop-toolbar-lead {
+   margin-top: 0.35rem;
+   font-size: 0.875rem;
+   line-height: 1.45;
+   color: #64748b;
+   max-width: 40rem;
+}
+
+.velmora-shop-toolbar-actions-card {
+   flex-shrink: 0;
+}
+
+.velmora-shop-toolbar--cover .velmora-shop-toolbar-actions-card {
+   border-radius: 0.75rem;
+   border: 1px solid rgb(255 255 255 / 0.22);
+   background: rgb(255 255 255 / 0.94);
+   backdrop-filter: blur(8px);
+   padding: 0.55rem;
+   box-shadow: 0 4px 16px rgb(15 23 42 / 0.12);
+}
+
+.dark .velmora-shop-toolbar {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-shop-toolbar-main {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+   .velmora-shop-toolbar-main {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+   }
+}
+
+.velmora-shop-toolbar-kicker {
+   display: inline-block;
+   font-size: 0.625rem;
+   font-weight: 800;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   color: #2563eb;
+   margin-bottom: 0.25rem;
+}
+
+.velmora-shop-toolbar-title {
+   font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+   font-weight: 800;
+   color: #111827;
+   line-height: 1.2;
+}
+
+.dark .velmora-shop-toolbar-title {
+   color: #ffffff;
+}
+
+.velmora-shop-toolbar-meta {
+   margin-top: 0.35rem;
+   font-size: 0.875rem;
+   color: #64748b;
+}
+
+.velmora-shop-toolbar-count {
+   font-weight: 800;
+   color: #111827;
+}
+
+.dark .velmora-shop-toolbar-count {
+   color: #ffffff;
+}
+
+.velmora-shop-toolbar-context {
+   font-weight: 700;
+   color: #111827;
+}
+
+.dark .velmora-shop-toolbar-context {
+   color: #ffffff;
+}
+
+.velmora-shop-toolbar-actions {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 0.5rem;
+}
+
+.velmora-shop-filter-btn,
+.velmora-shop-clear-btn,
+.velmora-shop-sort-select {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.35rem;
+   height: 2.5rem;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #f8fafc;
+   padding: 0 0.75rem;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.velmora-shop-clear-btn {
+   color: #2563eb;
+   border-color: rgb(37 99 235 / 0.2);
+   background: rgb(37 99 235 / 0.06);
+}
+
+.velmora-shop-sort-select {
+   min-width: 11rem;
+   font-weight: 600;
+}
+
+.velmora-shop-quick-strip {
+   margin-bottom: 0.75rem;
+}
+
+.velmora-shop-quick-strip-rail {
+   display: flex;
+   gap: 0.5rem;
+   overflow-x: auto;
+   padding-bottom: 0.15rem;
+   scrollbar-width: thin;
+}
+
+.velmora-shop-quick-pill {
+   flex: 0 0 auto;
+   display: inline-flex;
+   align-items: center;
+   gap: 0.25rem;
+   border-radius: 999px;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 0.45rem 0.85rem;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #475569;
+   white-space: nowrap;
+   transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.velmora-shop-quick-pill:hover {
+   border-color: rgb(37 99 235 / 0.35);
+   color: #2563eb;
+}
+
+.velmora-shop-quick-pill.is-active {
+   border-color: #2563eb;
+   background: rgb(37 99 235 / 0.08);
+   color: #2563eb;
+}
+
+.velmora-shop-quick-more {
+   position: relative;
+   flex: 0 0 auto;
+}
+
+.velmora-shop-quick-more-menu {
+   position: absolute;
+   top: calc(100% + 0.35rem);
+   right: 0;
+   z-index: 30;
+   min-width: 11rem;
+   border-radius: 0.625rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   box-shadow: 0 8px 24px rgb(15 23 42 / 0.1);
+   padding: 0.35rem;
+}
+
+.velmora-shop-quick-more-item {
+   display: block;
+   border-radius: 0.375rem;
+   padding: 0.45rem 0.6rem;
+   font-size: 0.8125rem;
+   font-weight: 600;
+   color: #111827;
+}
+
+.velmora-shop-quick-more-item:hover {
+   background: #f8fafc;
+   color: #2563eb;
+}
+
+.velmora-shop-quick-more-item.is-active {
+   background: rgb(37 99 235 / 0.08);
+   color: #2563eb;
+}
+
+.velmora-shop-quick-more-item.is-muted {
+   color: #64748b;
+   border-top: 1px solid rgb(226 232 240 / 0.9);
+   margin-top: 0.25rem;
+   padding-top: 0.55rem;
+}
+
+.velmora-shop-active-filters {
+   margin-bottom: 0.75rem;
+   border-radius: 0.75rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #ffffff;
+   padding: 0.65rem 0.85rem;
+}
+
+.dark .velmora-shop-active-filters {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-shop-layout {
+   display: grid;
+   grid-template-columns: minmax(0, 1fr);
+   gap: 1rem;
+   margin-top: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+   .velmora-shop-layout {
+      grid-template-columns: 17.5rem minmax(0, 1fr);
+      gap: 1.25rem;
+   }
+}
+
+.velmora-shop-sidebar-wrap {
+   display: none;
+}
+
+.velmora-shop-sidebar-wrap.is-open {
+   display: block;
+}
+
+@media (min-width: 1024px) {
+   .velmora-shop-sidebar-wrap {
+      display: block;
+   }
+}
+
+.velmora-shop-sidebar {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   box-shadow: 0 2px 10px rgb(15 23 42 / 0.04);
+   padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+   .velmora-shop-sidebar {
+      position: sticky;
+      top: 6.5rem;
+   }
+}
+
+.dark .velmora-shop-sidebar {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-shop-sidebar-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 0.5rem;
+   margin-bottom: 0.75rem;
+}
+
+.velmora-shop-sidebar-title {
+   font-size: 0.875rem;
+   font-weight: 800;
+   color: #111827;
+}
+
+.dark .velmora-shop-sidebar-title {
+   color: #ffffff;
+}
+
+.velmora-shop-sidebar-clear {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.25rem;
+   font-size: 0.75rem;
+   font-weight: 700;
+   color: #2563eb;
+}
+
+.velmora-shop-sidebar-block {
+   margin-bottom: 1rem;
+   padding-bottom: 1rem;
+   border-bottom: 1px solid rgb(226 232 240 / 0.9);
+}
+
+.velmora-shop-sidebar-label {
+   display: block;
+   font-size: 0.6875rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   letter-spacing: 0.06em;
+   color: #64748b;
+   margin-bottom: 0.5rem;
+}
+
+.velmora-shop-sidebar-input {
+   width: 100%;
+   height: 2.5rem;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #f8fafc;
+   padding: 0 0.75rem;
+   font-size: 0.8125rem;
+}
+
+.velmora-shop-sidebar-submit {
+   margin-top: 0.5rem;
+   width: 100%;
+   height: 2.5rem;
+   border-radius: 0.5rem;
+   background: #2563eb;
+   color: #ffffff;
+   font-size: 0.8125rem;
+   font-weight: 700;
+}
+
+.velmora-shop-tree-scroll {
+   max-height: 16rem;
+   overflow-y: auto;
+}
+
+.velmora-shop-tree,
+.velmora-shop-brand-list {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+.velmora-shop-tree-row {
+   display: flex;
+   align-items: center;
+   gap: 0.15rem;
+}
+
+.velmora-shop-tree-toggle,
+.velmora-shop-tree-spacer {
+   width: 1.5rem;
+   height: 1.5rem;
+   flex-shrink: 0;
+}
+
+.velmora-shop-tree-toggle {
+   border-radius: 0.25rem;
+   font-size: 0.75rem;
+   color: #64748b;
+}
+
+.velmora-shop-tree-link,
+.velmora-shop-brand-link {
+   flex: 1;
+   text-align: left;
+   border-radius: 0.375rem;
+   padding: 0.35rem 0.5rem;
+   font-size: 0.8125rem;
+   font-weight: 600;
+   color: #475569;
+}
+
+.velmora-shop-tree-link.is-active,
+.velmora-shop-brand-link.is-active {
+   background: #2563eb;
+   color: #ffffff;
+   font-weight: 700;
+}
+
+.velmora-shop-brand-scroll {
+   max-height: 11rem;
+   overflow-y: auto;
+}
+
+.velmora-shop-sidebar-browse {
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #2563eb;
+}
+
+.velmora-shop-main {
+   min-width: 0;
+}
+
+.velmora-shop-product-grid {
+   gap: 0.75rem;
+}
+
+.velmora-shop-product-card {
+   border: 1px solid rgb(226 232 240 / 0.9);
+   box-shadow: 0 1px 3px rgb(15 23 42 / 0.04);
+}
+
+.velmora-shop-skeleton-card {
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   background: #ffffff;
+   padding: 0.625rem;
+   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.velmora-shop-sidebar-skeleton {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240);
+   background: #ffffff;
+   height: 10rem;
+   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+   margin-bottom: 1rem;
+}
+
+.velmora-shop-empty {
+   border-radius: 1rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 2.5rem 1.5rem;
+   text-align: center;
+}
+
+.velmora-shop-empty-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 3.5rem;
+   height: 3.5rem;
+   border-radius: 999px;
+   background: rgb(37 99 235 / 0.08);
+   margin-bottom: 1rem;
+}
+
+.velmora-shop-empty-title {
+   font-size: 1.125rem;
+   font-weight: 800;
+   color: #111827;
+}
+
+.velmora-shop-empty-desc {
+   margin-top: 0.5rem;
+   font-size: 0.875rem;
+   color: #64748b;
+   max-width: 28rem;
+   margin-inline: auto;
+}
+
+.velmora-shop-empty-actions {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: center;
+   gap: 0.65rem;
+   margin-top: 1.25rem;
+}
+
+.velmora-shop-empty-btn {
+   border-radius: 0.5rem;
+   background: #2563eb;
+   color: #ffffff;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   padding: 0.55rem 1rem;
+}
+
+.velmora-shop-pagination {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.75rem;
+   margin-top: 1.5rem;
+   padding-top: 0.5rem;
+}
+
+.velmora-shop-page-btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.25rem;
+   border-radius: 0.5rem;
+   border: 1px solid rgb(226 232 240 / 0.95);
+   background: #ffffff;
+   padding: 0.5rem 0.85rem;
+   font-size: 0.8125rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.velmora-shop-page-btn:disabled {
+   opacity: 0.45;
+}
+
+.velmora-shop-page-meta {
+   font-size: 0.8125rem;
+   color: #64748b;
+}
+
+.velmora-categories-empty {
+   border-radius: 0.875rem;
+   border: 1px solid rgb(226 232 240);
+   background: #ffffff;
+   padding: 2rem;
+   text-align: center;
+   color: #64748b;
+   font-size: 0.875rem;
 }

@@ -1,68 +1,125 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { formatProductPrice } from '../../lib/productMappers.js'
+import {
+  areProductCardViewsEqual,
+  formatProductPrice,
+  getProductCardOfferLine,
+} from '../../lib/productMappers.js'
 
-export default function ProductCard({ product, currencySymbol = '$' }) {
+function ProductCard({ product, currencySymbol = '$', variant = 'default' }) {
   if (!product) return null
 
-  return (
-    <div className="group rounded-xl bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl dark:hover:shadow-xl shadow-gray-200 dark:shadow-gray-700 dark:hover:shadow-gray-700 overflow-hidden ease-in-out duration-500">
-      <div className="relative">
-        <img src={product.image} alt={product.title} className="h-56 w-full object-cover" />
+  const isCompact = variant === 'compact'
+  const metaLine = [product.brandName, product.categoryName].filter(Boolean).join(' · ')
+  const offerLine = getProductCardOfferLine(product)
 
-        <div className="absolute top-4 inset-e-4">
-          <span
-            className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              product.inStock
-                ? 'bg-emerald-500/90 text-white'
-                : 'bg-slate-700/90 text-white'
-            }`}
-          >
-            {product.inStock ? 'In stock' : 'Out of stock'}
-          </span>
-        </div>
-      </div>
+  const imageBlock = (
+    <div className={`velmora-product-media ${isCompact ? 'velmora-product-media-compact' : ''}`}>
+      <Link to={product.detailPath || '#'} className="block h-full w-full" tabIndex={-1}>
+        <img
+          src={product.image}
+          alt={product.title}
+          loading="lazy"
+          decoding="async"
+        />
+      </Link>
 
-      <div className="p-6">
-        <div className="pb-4">
-          <Link
-            to={product.detailPath || '#'}
-            className="text-lg hover:text-primary font-medium ease-in-out duration-500 line-clamp-2"
-          >
+      {product.discountPercent ? (
+        <span className="velmora-product-badge-discount">-{product.discountPercent}%</span>
+      ) : null}
+
+      <span
+        className={`velmora-product-badge-stock ${
+          product.inStock ? 'is-in-stock' : 'is-out-of-stock'
+        }`}
+      >
+        {product.inStock ? 'In stock' : 'Sold out'}
+      </span>
+    </div>
+  )
+
+  if (isCompact) {
+    return (
+      <article className="velmora-product-card-compact velmora-shop-product-card group h-full">
+        <div className="relative">{imageBlock}</div>
+
+        <div className="velmora-product-card-body">
+          {metaLine ? <p className="velmora-product-card-meta">{metaLine}</p> : null}
+
+          <Link to={product.detailPath || '#'} className="velmora-product-card-title">
             {product.title}
           </Link>
-          {product.categoryName ? (
-            <p className="text-slate-400 text-sm mt-2">{product.categoryName}</p>
-          ) : null}
-        </div>
 
-        <ul className="py-4 border-y border-slate-100 dark:border-gray-800 flex flex-wrap items-center gap-4 list-none text-sm text-slate-500">
-          {product.sku ? <li>SKU: {product.sku}</li> : null}
-          {product.brandName ? <li>{product.brandName}</li> : null}
-          {product.quantity != null ? <li>Qty: {product.quantity}</li> : null}
-        </ul>
+          {offerLine ? <p className="velmora-product-card-offer">{offerLine}</p> : null}
 
-        <div className="pt-6 flex justify-between items-center">
-          <div>
-            <span className="text-slate-400 text-sm">Price</span>
-            <p className="text-lg font-medium">
-              {formatProductPrice(product.price, currencySymbol)}
+          <div className="velmora-product-card-footer">
+            <div className="velmora-product-price-block min-w-0">
+              <p className="velmora-product-card-price">
+                {formatProductPrice(product.price, currencySymbol)}
+              </p>
               {product.compareAtPrice != null ? (
-                <span className="ms-2 text-sm text-slate-400 line-through">
+                <p className="velmora-product-card-compare">
                   {formatProductPrice(product.compareAtPrice, currencySymbol)}
-                </span>
+                </p>
               ) : null}
+            </div>
+
+            <Link to={product.detailPath || '#'} className="velmora-product-card-cta">
+              Shop
+            </Link>
+          </div>
+        </div>
+      </article>
+    )
+  }
+
+  return (
+    <article className="group rounded-xl border border-slate-200/90 dark:border-gray-800 bg-white dark:bg-slate-900 overflow-hidden hover:shadow-lg transition-shadow duration-200">
+      <div className="relative">{imageBlock}</div>
+
+      <div className="p-4">
+        <Link
+          to={product.detailPath || '#'}
+          className="text-base hover:text-[#2563EB] font-bold line-clamp-2 text-[#111827] dark:text-white"
+        >
+          {product.title}
+        </Link>
+        {metaLine ? <p className="text-[#64748B] text-xs mt-1.5 font-medium">{metaLine}</p> : null}
+        {offerLine ? <p className="velmora-product-card-offer mt-1.5">{offerLine}</p> : null}
+
+        <div className="pt-3 mt-3 border-t border-slate-100 dark:border-gray-800 flex justify-between items-end gap-3">
+          <div className="velmora-product-price-block">
+            <p className="text-lg font-extrabold text-[#111827] dark:text-white">
+              {formatProductPrice(product.price, currencySymbol)}
             </p>
+            {product.compareAtPrice != null ? (
+              <p className="text-xs text-[#64748B] line-through">
+                {formatProductPrice(product.compareAtPrice, currencySymbol)}
+              </p>
+            ) : null}
           </div>
 
           <Link
             to={product.detailPath || '#'}
-            className="btn bg-primary hover:bg-primary-dark border-primary hover:border-primary-dark text-white rounded-md text-sm"
+            className="velmora-product-card-cta px-4 py-2 text-xs"
           >
-            View
+            Shop
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
+
+function areProductCardPropsEqual(prev, next) {
+  if (prev.currencySymbol !== next.currencySymbol || prev.variant !== next.variant) {
+    return false
+  }
+
+  if (!prev.product && !next.product) return true
+  if (!prev.product || !next.product) return false
+
+  return areProductCardViewsEqual(prev.product, next.product)
+}
+
+export default React.memo(ProductCard, areProductCardPropsEqual)

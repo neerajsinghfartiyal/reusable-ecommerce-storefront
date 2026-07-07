@@ -1,74 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
-import LogoLight from "../../assets/images/logo-icon-64.png";
-import BackgroundImage from "../../assets/images/bg/01.jpg";
-
-import Switcher from "../../component/switcher";
+import velmoraMark from '../../assets/images/velmora-mark.svg'
+import { DEFAULT_STORE_NAME, STORE_TAGLINE } from '../../lib/productMappers.js'
+import Switcher from '../../component/switcher'
 
 export default function Maintenance() {
-    const [minutes, setMinutes] = useState(0);
-    const [remainingSeconds, setRemainingSeconds] = useState(0);
-    
-    useEffect(() => {
+  const [minutes, setMinutes] = useState(0)
+  const [remainingSeconds, setRemainingSeconds] = useState(0)
 
-        let intervalId = setInterval(() => {
-            calculateTimeRemaining()
-        }, 1000);
+  useEffect(() => {
+    let seconds = 3599
+    const intervalId = setInterval(() => {
+      const nextMinutes = Math.floor((seconds - 1) / 60)
+      const nextSeconds = (seconds - 1) % 60
 
-        var seconds = 3599;
-        function calculateTimeRemaining() {
+      setMinutes(nextMinutes)
+      setRemainingSeconds(nextSeconds)
 
-            const minutes = Math.round((seconds - 30) / 60);
-            const remainingSeconds = seconds % 60;
+      if (seconds <= 1) {
+        clearInterval(intervalId)
+      } else {
+        seconds -= 1
+      }
+    }, 1000)
 
-            setMinutes(minutes);
-            setRemainingSeconds(remainingSeconds);
+    return () => clearInterval(intervalId)
+  }, [])
 
-            if (seconds === 0) {
-                clearInterval(intervalId);
-            } else {
-                seconds = seconds - 1;
-            }
-        }
+  return (
+    <>
+      <section className="velmora-special-page">
+        <div className="w-full max-w-xl text-center">
+          <Link to="/" className="inline-flex items-center justify-center gap-2.5">
+            <img src={velmoraMark} alt="" className="size-12 rounded-lg" aria-hidden="true" />
+            <span className="font-semibold text-xl tracking-[0.16em] uppercase text-white">
+              {DEFAULT_STORE_NAME}
+            </span>
+          </Link>
 
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
+          <h1 className="text-white mb-4 mt-8 md:text-4xl text-3xl font-bold">
+            We&apos;ll be back soon
+          </h1>
+          <p className="text-slate-300 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+            {STORE_TAGLINE} Our store is undergoing maintenance and will return shortly.
+          </p>
 
+          <p className="mt-8 text-5xl font-bold text-white tabular-nums">
+            {minutes}:{String(remainingSeconds).padStart(2, '0')}
+          </p>
+          <p className="text-xs uppercase tracking-widest text-slate-400 mt-2">Estimated window</p>
 
-    return (
-        <>
-
-            <section className="md:h-screen py-36 flex items-center justify-center relative overflow-hidden zoom-image">
-                <div  style={{ backgroundImage: `url(${BackgroundImage})` }} className="absolute inset-0 image-wrap z-1 bg-no-repeat bg-center bg-cover"></div>
-                <div className="absolute inset-0 bg-linear-to-b from-transparent to-slate-900 z-2"></div>
-                <div className="container relative z-3 text-center">
-
-                    <div className="grid grid-cols-1">
-                        <img src={LogoLight} className="mx-auto" alt="" />
-                        <h1 className="text-white mb-6 mt-8 md:text-5xl text-3xl font-bold">We Are Back Soon...</h1>
-                        <p className="text-white/70 text-lg max-w-xl mx-auto">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
-                    </div>
-                    <div className="grid grid-cols-1 mt-10">
-                        <div className="text-center">
-                            <span id="maintenance" className="timer text-white text-[56px] tracking-[1px]">{minutes}:{remainingSeconds}</span>
-                            <span className="block text-base font-semibold uppercase text-white">Minutes</span>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 mt-8">
-                        <div className="text-center subcribe-form">
-                            <form className="relative mx-auto max-w-xl">
-                                <input type="email" id="subemail" name="name" className="pt-4 pe-40 pb-4 ps-6 w-full h-12.5 outline-none text-slate-900 dark:text-white rounded-full bg-white/70 dark:bg-slate-900/70 border border-gray-200 dark:border-gray-700" placeholder="Enter your email id.." />
-                                <button type="submit" className="btn absolute top-0.5 inset-e-0.75 h-11.5 bg-primary hover:bg-primary-dark border-primary hover:border-primary-dark text-white rounded-full">Subcribe Now</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            {/* <!--end section --> */}
-            <Switcher />
-        </>
-    );
-
+          <div className="mt-8">
+            <Link to="/shop" className="velmora-btn-accent">
+              Browse when we&apos;re back
+            </Link>
+          </div>
+        </div>
+      </section>
+      <Switcher />
+    </>
+  )
 }

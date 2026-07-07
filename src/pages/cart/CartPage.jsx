@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FiRefreshCw, FiShoppingBag } from 'react-icons/fi'
 
 import Navbar from '../../component/navbar'
 import Footer from '../../component/footer'
 import Switcher from '../../component/switcher'
+import StorePageShell from '../../component/layout/StorePageShell.jsx'
+import PageHeader from '../../component/layout/PageHeader.jsx'
+import CartLineItem from '../../component/cart/CartLineItem.jsx'
+import OrderSummaryCard from '../../component/checkout/OrderSummaryCard.jsx'
+import CheckoutTrustNotes from '../../component/checkout/CheckoutTrustNotes.jsx'
+import MethodOptionList from '../../component/checkout/MethodOptionList.jsx'
 import { useCart } from '../../context/useCart.js'
 import { getPublicSettings } from '../../api/publicSettingsApi.js'
-import { formatProductPrice } from '../../lib/productMappers.js'
+import { formatDocumentTitle, getDefaultDocumentTitle } from '../../lib/pageTitle.js'
 
 export default function CartPage() {
   const {
     items,
+    itemCount,
     subtotal,
     shippingAmount,
     discountAmount,
@@ -41,10 +49,10 @@ export default function CartPage() {
   const [selectionError, setSelectionError] = useState('')
 
   useEffect(() => {
-    document.title = 'Your Cart'
+    document.title = formatDocumentTitle('Shopping Cart')
 
     return () => {
-      document.title = 'Reusable Ecommerce Storefront'
+      document.title = getDefaultDocumentTitle()
     }
   }, [])
 
@@ -117,173 +125,80 @@ export default function CartPage() {
     }
   }
 
-  const renderShippingSection = () => (
-    <section className="mt-8 rounded-md border border-slate-100 dark:border-gray-800 p-6">
-      <h5 className="text-xl font-medium mb-4">Shipping Method</h5>
-
-      {checkoutOptionsLoading ? (
-        <p className="text-slate-500 text-sm">Loading shipping methods...</p>
-      ) : null}
-
-      {!checkoutOptionsLoading && !shippingEnabled ? (
-        <p className="text-slate-500 text-sm">
-          Shipping is not enabled for this store.
-        </p>
-      ) : null}
-
-      {!checkoutOptionsLoading && shippingEnabled && shippingOptions.length === 0 ? (
-        <p className="text-slate-500 text-sm">
-          Shipping options are selected at checkout after you enter your delivery address.
-        </p>
-      ) : null}
-
-      {!checkoutOptionsLoading && shippingOptions.length > 0 ? (
-        <ul className="list-none space-y-3">
-          {shippingOptions.map((option) => {
-            const isSelected = selectedShippingMethod.id === option.id
-            const isSelecting = selectingShippingId === option.id
-
-            return (
-              <li key={option.id}>
-                <label
-                  className={`flex items-start gap-3 rounded-md border p-4 cursor-pointer ${
-                    isSelected
-                      ? 'border-primary bg-primary/5'
-                      : 'border-slate-100 dark:border-gray-800'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="shipping-method"
-                    className="mt-1"
-                    checked={isSelected}
-                    disabled={Boolean(selectingShippingId)}
-                    onChange={() => handleSelectShipping(option.id)}
-                  />
-                  <span className="flex-1">
-                    <span className="font-medium block">{option.name}</span>
-                    {option.description ? (
-                      <span className="text-sm text-slate-500 block mt-1">
-                        {option.description}
-                      </span>
-                    ) : null}
-                  </span>
-                  <span className="font-medium whitespace-nowrap">
-                    {isSelecting
-                      ? 'Updating...'
-                      : formatProductPrice(option.charge, currencySymbol)}
-                  </span>
-                </label>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-    </section>
-  )
-
-  const renderPaymentSection = () => (
-    <section className="mt-8 rounded-md border border-slate-100 dark:border-gray-800 p-6">
-      <h5 className="text-xl font-medium mb-4">Payment Method</h5>
-
-      {checkoutOptionsLoading ? (
-        <p className="text-slate-500 text-sm">Loading payment options...</p>
-      ) : null}
-
-      {!checkoutOptionsLoading && paymentOptions.length === 0 ? (
-        <p className="text-slate-500 text-sm">
-          No payment methods are available. Please configure them in admin.
-        </p>
-      ) : null}
-
-      {!checkoutOptionsLoading && paymentOptions.length > 0 ? (
-        <ul className="list-none space-y-3">
-          {paymentOptions.map((option) => {
-            const isSelected = selectedPaymentMethod.id === option.id
-            const isSelecting = selectingPaymentId === option.id
-
-            return (
-              <li key={option.id}>
-                <label
-                  className={`flex items-start gap-3 rounded-md border p-4 cursor-pointer ${
-                    isSelected
-                      ? 'border-primary bg-primary/5'
-                      : 'border-slate-100 dark:border-gray-800'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="payment-method"
-                    className="mt-1"
-                    checked={isSelected}
-                    disabled={Boolean(selectingPaymentId)}
-                    onChange={() => handleSelectPayment(option.id)}
-                  />
-                  <span className="flex-1">
-                    <span className="font-medium block">{option.name}</span>
-                    {option.description ? (
-                      <span className="text-sm text-slate-500 block mt-1">
-                        {option.description}
-                      </span>
-                    ) : null}
-                  </span>
-                  {isSelecting ? (
-                    <span className="text-sm text-slate-500">Saving...</span>
-                  ) : null}
-                </label>
-              </li>
-            )
-          })}
-        </ul>
-      ) : null}
-    </section>
-  )
+  const shippingNote =
+    shippingOptions.length === 0 && shippingEnabled
+      ? 'Final shipping is calculated from available methods at checkout after you enter your address.'
+      : 'Shipping method can be updated during checkout if your address changes.'
 
   return (
     <>
       <Navbar />
-      <section className="relative md:pb-24 pb-16 mt-20">
-        <div className="container md:mt-24 mt-16">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <h4 className="text-2xl font-medium">Shopping Cart</h4>
-            <button
-              type="button"
-              onClick={() => refreshCart()}
-              className="text-sm text-primary hover:underline"
-            >
-              Refresh cart
-            </button>
-          </div>
+      <StorePageShell>
+          <PageHeader
+            title="Shopping Cart"
+            subtitle={
+              !loading && items.length > 0
+                ? itemCount === 1
+                  ? '1 item in your cart'
+                  : `${itemCount} items in your cart`
+                : undefined
+            }
+            actions={
+              <button
+                type="button"
+                onClick={() => refreshCart()}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              >
+                <FiRefreshCw className="size-4" />
+                Refresh cart
+              </button>
+            }
+          />
 
           {loading ? (
-            <p className="text-slate-500 py-12 text-center">Loading cart...</p>
+            <div className="velmora-section-panel p-12 text-center">
+              <p className="text-[#64748B]">Loading cart...</p>
+            </div>
           ) : null}
 
           {!loading && error ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
-              {error}
+            <div className="velmora-section-panel p-6 mb-6 border-red-200 bg-red-50 dark:bg-red-900/20">
+              <p className="text-red-700 dark:text-red-300 font-medium">{error}</p>
+              <button
+                type="button"
+                onClick={() => refreshCart()}
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2"
+              >
+                <FiRefreshCw className="size-4" />
+                Refresh cart
+              </button>
             </div>
           ) : null}
 
           {!loading && itemError ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
+            <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6 text-sm">
               {itemError}
             </div>
           ) : null}
 
           {!loading && (checkoutOptionsError || selectionError) ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
+            <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6 text-sm">
               {selectionError || checkoutOptionsError}
             </div>
           ) : null}
 
-          {!loading && items.length === 0 ? (
-            <div className="text-center py-16 rounded-md bg-slate-50 dark:bg-slate-800">
-              <h5 className="text-xl font-medium">Your cart is empty</h5>
-              <p className="text-slate-400 mt-3">Add products to start shopping.</p>
+          {!loading && items.length === 0 && !error ? (
+            <div className="velmora-section-panel p-10 sm:p-14 text-center max-w-lg mx-auto">
+              <span className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary/10 text-primary mb-5">
+                <FiShoppingBag className="size-8" />
+              </span>
+              <h2 className="text-xl font-bold text-[#111827] dark:text-white">Your cart is empty</h2>
+              <p className="text-[#64748B] mt-3 leading-relaxed">
+                Browse the shop and add products to start your order.
+              </p>
               <Link
-                to="/products"
-                className="btn bg-primary hover:bg-primary-dark text-white rounded-md mt-6"
+                to="/shop"
+                className="inline-block mt-6 rounded-lg bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-3"
               >
                 Continue shopping
               </Link>
@@ -291,140 +206,87 @@ export default function CartPage() {
           ) : null}
 
           {!loading && items.length > 0 ? (
-            <div className="md:flex gap-8">
-              <div className="md:w-2/3">
-                <ul className="list-none space-y-4">
-                  {items.map((item) => {
-                    const isUpdating = actionProductId === item.productId
-
-                    return (
-                      <li
-                        key={item.productId}
-                        className="rounded-md border border-slate-100 dark:border-gray-800 p-4"
-                      >
-                        <div className="flex gap-4">
-                          <Link to={item.detailPath} className="shrink-0">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-24 h-24 object-cover rounded-md"
-                            />
-                          </Link>
-
-                          <div className="flex-1 min-w-0">
-                            <Link
-                              to={item.detailPath}
-                              className="font-medium hover:text-primary line-clamp-2"
-                            >
-                              {item.name}
-                            </Link>
-                            {item.sku ? (
-                              <p className="text-sm text-slate-400 mt-1">SKU: {item.sku}</p>
-                            ) : null}
-                            <p className="mt-2 font-medium">
-                              {formatProductPrice(item.price, currencySymbol)}
-                            </p>
-
-                            <div className="mt-4 flex flex-wrap items-center gap-3">
-                              <label
-                                className="text-sm text-slate-500"
-                                htmlFor={`qty-${item.productId}`}
-                              >
-                                Qty
-                              </label>
-                              <div className="inline-flex items-center rounded-md border border-slate-200 dark:border-gray-700">
-                                <button
-                                  type="button"
-                                  disabled={isUpdating || item.quantity <= 1}
-                                  onClick={() =>
-                                    handleQuantityChange(item.productId, item.quantity - 1)
-                                  }
-                                  className="px-3 py-1 disabled:opacity-50"
-                                >
-                                  −
-                                </button>
-                                <span
-                                  id={`qty-${item.productId}`}
-                                  className="px-3 py-1 min-w-10 text-center"
-                                >
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  type="button"
-                                  disabled={
-                                    isUpdating ||
-                                    (item.maxQuantity != null &&
-                                      item.quantity >= item.maxQuantity)
-                                  }
-                                  onClick={() =>
-                                    handleQuantityChange(item.productId, item.quantity + 1)
-                                  }
-                                  className="px-3 py-1 disabled:opacity-50"
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <button
-                                type="button"
-                                disabled={isUpdating}
-                                onClick={() => handleRemove(item.productId)}
-                                className="text-sm text-red-600 hover:underline disabled:opacity-50"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </div>
-
-                          <div className="text-end font-medium">
-                            {formatProductPrice(item.total, currencySymbol)}
-                          </div>
-                        </div>
-                      </li>
-                    )
-                  })}
+            <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+              <div className="lg:col-span-7 xl:col-span-8 space-y-4">
+                <ul className="list-none space-y-4 m-0 p-0">
+                  {items.map((item) => (
+                    <li key={item.productId}>
+                      <CartLineItem
+                        item={item}
+                        currencySymbol={currencySymbol}
+                        isUpdating={actionProductId === item.productId}
+                        onQuantityChange={handleQuantityChange}
+                        onRemove={handleRemove}
+                      />
+                    </li>
+                  ))}
                 </ul>
 
-                {renderShippingSection()}
-                {renderPaymentSection()}
+                {shippingEnabled || shippingOptions.length > 0 ? (
+                  <section className="velmora-section-panel p-5 sm:p-6">
+                    <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">
+                      Shipping method
+                    </h2>
+                    <p className="text-sm text-[#64748B] mb-4">
+                      Select a shipping option if available. Address-based options load at checkout.
+                    </p>
+                    <MethodOptionList
+                      name="cart-shipping-method"
+                      options={shippingOptions}
+                      selectedId={selectedShippingMethod.id}
+                      selectingId={selectingShippingId}
+                      onSelect={handleSelectShipping}
+                      currencySymbol={currencySymbol}
+                      loading={checkoutOptionsLoading}
+                      loadingMessage="Loading shipping methods..."
+                      emptyMessage={
+                        !shippingEnabled
+                          ? 'Shipping is not enabled for this store.'
+                          : 'Shipping options are selected at checkout after you enter your delivery address.'
+                      }
+                    />
+                  </section>
+                ) : null}
+
+                {paymentOptions.length > 0 || checkoutOptionsLoading ? (
+                  <section className="velmora-section-panel p-5 sm:p-6">
+                    <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">
+                      Payment method
+                    </h2>
+                    <p className="text-sm text-[#64748B] mb-4">
+                      Choose how you would like to pay. Payment is confirmed during checkout.
+                    </p>
+                    <MethodOptionList
+                      name="cart-payment-method"
+                      options={paymentOptions}
+                      selectedId={selectedPaymentMethod.id}
+                      selectingId={selectingPaymentId}
+                      onSelect={handleSelectPayment}
+                      currencySymbol={currencySymbol}
+                      loading={checkoutOptionsLoading}
+                      loadingMessage="Loading payment options..."
+                      emptyMessage="No payment methods are available. Please configure them in admin."
+                    />
+                  </section>
+                ) : null}
               </div>
 
-              <div className="md:w-1/3 mt-8 md:mt-0">
-                <div className="sticky top-20 rounded-md bg-slate-50 dark:bg-slate-800 p-6 shadow-sm">
-                  <h5 className="text-xl font-medium mb-4">Order Summary</h5>
-                  <ul className="list-none space-y-3 text-sm">
-                    <li className="flex justify-between">
-                      <span className="text-slate-500">Subtotal</span>
-                      <span>{formatProductPrice(subtotal, currencySymbol)}</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="text-slate-500">Delivery Fee</span>
-                      <span>{formatProductPrice(shippingAmount, currencySymbol)}</span>
-                    </li>
-                    {discountAmount > 0 ? (
-                      <li className="flex justify-between">
-                        <span className="text-slate-500">Discount</span>
-                        <span>-{formatProductPrice(discountAmount, currencySymbol)}</span>
-                      </li>
-                    ) : null}
-                    {selectedShippingMethod.name ? (
-                      <li className="text-slate-500 text-xs pt-1">
-                        Shipping: {selectedShippingMethod.name}
-                      </li>
-                    ) : null}
-                    {selectedPaymentMethod.name ? (
-                      <li className="text-slate-500 text-xs">
-                        Payment: {selectedPaymentMethod.name}
-                      </li>
-                    ) : null}
-                    <li className="flex justify-between font-medium text-base pt-3 border-t border-slate-200 dark:border-gray-700">
-                      <span>Total</span>
-                      <span>{formatProductPrice(totalAmount, currencySymbol)}</span>
-                    </li>
-                  </ul>
-
+              <div className="lg:col-span-5 xl:col-span-4 space-y-4 lg:sticky lg:top-24">
+                <OrderSummaryCard
+                  items={items}
+                  itemCount={itemCount}
+                  subtotal={subtotal}
+                  shippingAmount={shippingAmount}
+                  discountAmount={discountAmount}
+                  totalAmount={totalAmount}
+                  currencySymbol={currencySymbol}
+                  selectedShippingMethod={selectedShippingMethod}
+                  selectedPaymentMethod={selectedPaymentMethod}
+                  shippingNote={shippingNote}
+                  showLineItems={false}
+                >
                   {checkoutReadinessMessage ? (
-                    <p className="text-sm text-amber-700 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-300 rounded-md px-3 py-2 mt-4">
+                    <p className="text-sm text-amber-800 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-300 rounded-lg px-3 py-2">
                       {checkoutReadinessMessage}
                     </p>
                   ) : null}
@@ -432,7 +294,7 @@ export default function CartPage() {
                   {canProceedToCheckout ? (
                     <Link
                       to="/checkout"
-                      className="btn bg-primary hover:bg-primary-dark text-white rounded-md w-full mt-6 block text-center"
+                      className="block w-full text-center rounded-lg bg-[#F59E0B] hover:bg-[#d97706] text-white font-semibold py-3 px-4 transition-colors"
                     >
                       Proceed to checkout
                     </Link>
@@ -440,24 +302,25 @@ export default function CartPage() {
                     <button
                       type="button"
                       disabled
-                      className="btn bg-primary/60 text-white rounded-md w-full mt-6 cursor-not-allowed"
+                      className="w-full rounded-lg bg-primary/50 text-white font-semibold py-3 px-4 cursor-not-allowed"
                     >
                       Proceed to checkout
                     </button>
                   )}
 
                   <Link
-                    to="/products"
-                    className="btn bg-transparent hover:bg-primary border border-primary text-primary hover:text-white rounded-md w-full mt-3 block text-center"
+                    to="/shop"
+                    className="block w-full text-center rounded-lg border border-primary text-primary hover:bg-primary hover:text-white font-semibold py-2.5 px-4 transition-colors"
                   >
                     Continue shopping
                   </Link>
-                </div>
+                </OrderSummaryCard>
+
+                <CheckoutTrustNotes />
               </div>
             </div>
           ) : null}
-        </div>
-      </section>
+      </StorePageShell>
       <Footer />
       <Switcher />
     </>

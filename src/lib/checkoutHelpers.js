@@ -105,3 +105,23 @@ export const buildCheckoutCustomerPayload = (form) => ({
     country: form.country.trim(),
   },
 })
+
+export const resolveCheckoutStep = ({
+  customerCheckoutPrepared,
+  customerShippingRequired,
+  customerPaymentRequired,
+  selectedShippingMethod,
+  selectedPaymentMethod,
+}) => {
+  if (!customerCheckoutPrepared) return 1
+
+  if (customerShippingRequired && !selectedShippingMethod?.id) {
+    return 2
+  }
+
+  if (customerPaymentRequired && !selectedPaymentMethod?.id) {
+    return 3
+  }
+
+  return 4
+}

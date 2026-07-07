@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import Navbar from '../../component/navbar'
 import Footer from '../../component/footer'
 import Switcher from '../../component/switcher'
+import StorePageShell from '../../component/layout/StorePageShell.jsx'
+import PageHeader from '../../component/layout/PageHeader.jsx'
+import CheckoutStepIndicator from '../../component/checkout/CheckoutStepIndicator.jsx'
+import OrderSummaryCard from '../../component/checkout/OrderSummaryCard.jsx'
+import CheckoutTrustNotes from '../../component/checkout/CheckoutTrustNotes.jsx'
+import MethodOptionList from '../../component/checkout/MethodOptionList.jsx'
 import { useCart } from '../../context/useCart.js'
 import { getPublicSettings } from '../../api/publicSettingsApi.js'
-import { formatProductPrice } from '../../lib/productMappers.js'
+import { formatDocumentTitle, getDefaultDocumentTitle } from '../../lib/pageTitle.js'
 import {
   buildCheckoutCustomerPayload,
   mapOrderToSuccessSummary,
+  resolveCheckoutStep,
   validateCheckoutForm,
 } from '../../lib/checkoutHelpers.js'
 import { saveOrderSuccess } from '../../lib/orderSession.js'
@@ -29,10 +36,24 @@ const initialForm = {
 
 const ADDRESS_FIELDS = ['street', 'city', 'state', 'postalCode', 'country']
 
+function FormField({ id, label, required, error, children }) {
+  return (
+    <div>
+      <label htmlFor={id} className="text-sm font-medium text-[#111827] dark:text-white">
+        {label}
+        {required ? <span className="text-red-500 ms-0.5">*</span> : null}
+      </label>
+      <div className="mt-1.5">{children}</div>
+      {error ? <p className="text-sm text-red-600 mt-1">{error}</p> : null}
+    </div>
+  )
+}
+
 export default function CheckoutPage() {
   const navigate = useNavigate()
   const {
     items,
+    itemCount,
     subtotal,
     shippingAmount,
     discountAmount,
@@ -70,10 +91,10 @@ export default function CheckoutPage() {
   const [currencySymbol, setCurrencySymbol] = useState('$')
 
   useEffect(() => {
-    document.title = 'Checkout'
+    document.title = formatDocumentTitle('Checkout')
 
     return () => {
-      document.title = 'Reusable Ecommerce Storefront'
+      document.title = getDefaultDocumentTitle()
     }
   }, [])
 
@@ -109,6 +130,24 @@ export default function CheckoutPage() {
       navigate('/cart', { replace: true })
     }
   }, [canProceedToCheckout, items.length, loading, navigate])
+
+  const currentStep = useMemo(
+    () =>
+      resolveCheckoutStep({
+        customerCheckoutPrepared,
+        customerShippingRequired,
+        customerPaymentRequired,
+        selectedShippingMethod,
+        selectedPaymentMethod,
+      }),
+    [
+      customerCheckoutPrepared,
+      customerShippingRequired,
+      customerPaymentRequired,
+      selectedShippingMethod,
+      selectedPaymentMethod,
+    ],
+  )
 
   const updateField = (name, value) => {
     setForm((current) => ({ ...current, [name]: value }))
@@ -205,158 +244,13 @@ export default function CheckoutPage() {
     }
   }
 
-  const renderShippingSection = () => {
-    if (!customerCheckoutPrepared) return null
-
-    return (
-      <section className="rounded-md border border-slate-100 dark:border-gray-800 p-6">
-        <h5 className="text-xl font-medium mb-4">Shipping Method</h5>
-
-        {customerCheckoutLoading ? (
-          <p className="text-slate-500 text-sm">Loading shipping methods...</p>
-        ) : null}
-
-        {!customerCheckoutLoading && !customerShippingEnabled ? (
-          <p className="text-slate-500 text-sm">
-            Shipping is not enabled for this store.
-          </p>
-        ) : null}
-
-        {!customerCheckoutLoading &&
-        customerShippingEnabled &&
-        customerShippingOptions.length === 0 ? (
-          <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
-            No shipping methods are available for this address. Try a different address or
-            contact the store.
-          </div>
-        ) : null}
-
-        {!customerCheckoutLoading && customerShippingOptions.length > 0 ? (
-          <ul className="list-none space-y-3">
-            {customerShippingOptions.map((option) => {
-              const isSelected = selectedShippingMethod.id === option.id
-              const isSelecting = selectingShippingId === option.id
-
-              return (
-                <li key={option.id}>
-                  <label
-                    className={`flex items-start gap-3 rounded-md border p-4 cursor-pointer ${
-                      isSelected
-                        ? 'border-primary bg-primary/5'
-                        : 'border-slate-100 dark:border-gray-800'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="checkout-shipping-method"
-                      className="mt-1"
-                      checked={isSelected}
-                      disabled={Boolean(selectingShippingId)}
-                      onChange={() => handleSelectShipping(option.id)}
-                    />
-                    <span className="flex-1">
-                      <span className="font-medium block">{option.name}</span>
-                      {option.description ? (
-                        <span className="text-sm text-slate-500 block mt-1">
-                          {option.description}
-                        </span>
-                      ) : null}
-                      {customerShippingOptions.length === 1 && isSelected ? (
-                        <span className="text-xs text-slate-500 block mt-1">
-                          Only available option (auto-selected)
-                        </span>
-                      ) : null}
-                    </span>
-                    <span className="font-medium whitespace-nowrap">
-                      {isSelecting
-                        ? 'Updating...'
-                        : formatProductPrice(option.charge, currencySymbol)}
-                    </span>
-                  </label>
-                </li>
-              )
-            })}
-          </ul>
-        ) : null}
-      </section>
-    )
-  }
-
-  const renderPaymentSection = () => {
-    if (!customerCheckoutPrepared) return null
-
-    return (
-      <section className="rounded-md border border-slate-100 dark:border-gray-800 p-6">
-        <h5 className="text-xl font-medium mb-4">Payment Method</h5>
-
-        {customerCheckoutLoading ? (
-          <p className="text-slate-500 text-sm">Loading payment options...</p>
-        ) : null}
-
-        {!customerCheckoutLoading && customerPaymentOptions.length === 0 ? (
-          <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
-            No payment methods are available. Please contact the store.
-          </div>
-        ) : null}
-
-        {!customerCheckoutLoading && customerPaymentOptions.length > 0 ? (
-          <ul className="list-none space-y-3">
-            {customerPaymentOptions.map((option) => {
-              const isSelected = selectedPaymentMethod.id === option.id
-              const isSelecting = selectingPaymentId === option.id
-
-              return (
-                <li key={option.id}>
-                  <label
-                    className={`flex items-start gap-3 rounded-md border p-4 cursor-pointer ${
-                      isSelected
-                        ? 'border-primary bg-primary/5'
-                        : 'border-slate-100 dark:border-gray-800'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="checkout-payment-method"
-                      className="mt-1"
-                      checked={isSelected}
-                      disabled={Boolean(selectingPaymentId)}
-                      onChange={() => handleSelectPayment(option.id)}
-                    />
-                    <span className="flex-1">
-                      <span className="font-medium block">{option.name}</span>
-                      {option.description ? (
-                        <span className="text-sm text-slate-500 block mt-1">
-                          {option.description}
-                        </span>
-                      ) : null}
-                      {customerPaymentOptions.length === 1 && isSelected ? (
-                        <span className="text-xs text-slate-500 block mt-1">
-                          Only available option (auto-selected)
-                        </span>
-                      ) : null}
-                    </span>
-                    {isSelecting ? (
-                      <span className="text-sm text-slate-500">Saving...</span>
-                    ) : null}
-                  </label>
-                </li>
-              )
-            })}
-          </ul>
-        ) : null}
-      </section>
-    )
-  }
-
   if (loading || items.length === 0) {
     return (
       <>
         <Navbar />
-        <section className="relative md:pb-24 pb-16 mt-20">
-          <div className="container md:mt-24 mt-16 text-center py-16">
-            <p className="text-slate-500">Loading checkout...</p>
-          </div>
-        </section>
+        <StorePageShell>
+          <p className="text-[#64748B] text-center py-16">Loading checkout...</p>
+        </StorePageShell>
         <Footer />
         <Switcher />
       </>
@@ -366,172 +260,141 @@ export default function CheckoutPage() {
   return (
     <>
       <Navbar />
-      <section className="relative md:pb-24 pb-16 mt-20">
-        <div className="container md:mt-24 mt-16">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <h4 className="text-2xl font-medium">Checkout</h4>
-            <Link to="/cart" className="text-sm text-primary hover:underline">
-              Back to cart
-            </Link>
-          </div>
+      <StorePageShell containerClassName="pb-12">
+          <PageHeader
+            title="Checkout"
+            subtitle="Complete your order securely"
+            actions={
+              <Link to="/cart" className="text-sm font-semibold text-primary hover:underline">
+                Back to cart
+              </Link>
+            }
+          />
+
+          <CheckoutStepIndicator currentStep={currentStep} />
 
           {prepareError || checkoutOptionsError ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
+            <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6 text-sm">
               {prepareError || checkoutOptionsError}
             </div>
           ) : null}
 
           {selectionError ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
+            <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6 text-sm">
               {selectionError}
             </div>
           ) : null}
 
           {submitError ? (
-            <div className="rounded-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6">
+            <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 mb-6 text-sm">
               {submitError}
             </div>
           ) : null}
 
-          <form onSubmit={handlePlaceOrder} className="md:flex gap-8">
-            <div className="md:w-2/3 space-y-8">
-              <section className="rounded-md border border-slate-100 dark:border-gray-800 p-6">
-                <h5 className="text-xl font-medium mb-4">Customer Information</h5>
+          <form onSubmit={handlePlaceOrder} className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+              <section className="velmora-section-panel p-5 sm:p-6">
+                <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">
+                  Customer details
+                </h2>
+                <p className="text-sm text-[#64748B] mb-5">
+                  Required fields are marked with an asterisk.
+                </p>
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-slate-500" htmlFor="firstName">
-                      First name
-                    </label>
+                  <FormField id="firstName" label="First name" required error={fieldErrors.firstName}>
                     <input
                       id="firstName"
                       value={form.firstName}
                       onChange={(event) => updateField('firstName', event.target.value)}
-                      className="form-input mt-1 w-full"
+                      className="velmora-form-field"
+                      autoComplete="given-name"
                     />
-                    {fieldErrors.firstName ? (
-                      <p className="text-sm text-red-600 mt-1">{fieldErrors.firstName}</p>
-                    ) : null}
-                  </div>
-                  <div>
-                    <label className="text-sm text-slate-500" htmlFor="lastName">
-                      Last name
-                    </label>
+                  </FormField>
+                  <FormField id="lastName" label="Last name" required error={fieldErrors.lastName}>
                     <input
                       id="lastName"
                       value={form.lastName}
                       onChange={(event) => updateField('lastName', event.target.value)}
-                      className="form-input mt-1 w-full"
+                      className="velmora-form-field"
+                      autoComplete="family-name"
                     />
-                    {fieldErrors.lastName ? (
-                      <p className="text-sm text-red-600 mt-1">{fieldErrors.lastName}</p>
-                    ) : null}
-                  </div>
-                  <div>
-                    <label className="text-sm text-slate-500" htmlFor="email">
-                      Email
-                    </label>
+                  </FormField>
+                  <FormField id="email" label="Email" required error={fieldErrors.email}>
                     <input
                       id="email"
                       type="email"
                       value={form.email}
                       onChange={(event) => updateField('email', event.target.value)}
-                      className="form-input mt-1 w-full"
+                      className="velmora-form-field"
+                      autoComplete="email"
                     />
-                    {fieldErrors.email ? (
-                      <p className="text-sm text-red-600 mt-1">{fieldErrors.email}</p>
-                    ) : null}
-                  </div>
-                  <div>
-                    <label className="text-sm text-slate-500" htmlFor="phone">
-                      Phone
-                    </label>
+                  </FormField>
+                  <FormField id="phone" label="Phone" required error={fieldErrors.phone}>
                     <input
                       id="phone"
                       value={form.phone}
                       onChange={(event) => updateField('phone', event.target.value)}
-                      className="form-input mt-1 w-full"
+                      className="velmora-form-field"
+                      autoComplete="tel"
                     />
-                    {fieldErrors.phone ? (
-                      <p className="text-sm text-red-600 mt-1">{fieldErrors.phone}</p>
-                    ) : null}
-                  </div>
+                  </FormField>
                 </div>
               </section>
 
-              <section className="rounded-md border border-slate-100 dark:border-gray-800 p-6">
-                <h5 className="text-xl font-medium mb-4">Shipping Address</h5>
+              <section className="velmora-section-panel p-5 sm:p-6">
+                <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">
+                  Delivery address
+                </h2>
+                <p className="text-sm text-[#64748B] mb-5">
+                  Shipping is calculated from available methods for this address.
+                </p>
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-sm text-slate-500" htmlFor="street">
-                      Street address
-                    </label>
+                  <FormField id="street" label="Street address" required error={fieldErrors.street}>
                     <input
                       id="street"
                       value={form.street}
                       onChange={(event) => updateField('street', event.target.value)}
-                      className="form-input mt-1 w-full"
+                      className="velmora-form-field"
+                      autoComplete="street-address"
                     />
-                    {fieldErrors.street ? (
-                      <p className="text-sm text-red-600 mt-1">{fieldErrors.street}</p>
-                    ) : null}
-                  </div>
+                  </FormField>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm text-slate-500" htmlFor="city">
-                        City
-                      </label>
+                    <FormField id="city" label="City" required error={fieldErrors.city}>
                       <input
                         id="city"
                         value={form.city}
                         onChange={(event) => updateField('city', event.target.value)}
-                        className="form-input mt-1 w-full"
+                        className="velmora-form-field"
+                        autoComplete="address-level2"
                       />
-                      {fieldErrors.city ? (
-                        <p className="text-sm text-red-600 mt-1">{fieldErrors.city}</p>
-                      ) : null}
-                    </div>
-                    <div>
-                      <label className="text-sm text-slate-500" htmlFor="state">
-                        State
-                      </label>
+                    </FormField>
+                    <FormField id="state" label="State / region" required error={fieldErrors.state}>
                       <input
                         id="state"
                         value={form.state}
                         onChange={(event) => updateField('state', event.target.value)}
-                        className="form-input mt-1 w-full"
+                        className="velmora-form-field"
+                        autoComplete="address-level1"
                       />
-                      {fieldErrors.state ? (
-                        <p className="text-sm text-red-600 mt-1">{fieldErrors.state}</p>
-                      ) : null}
-                    </div>
-                    <div>
-                      <label className="text-sm text-slate-500" htmlFor="postalCode">
-                        Postal code
-                      </label>
+                    </FormField>
+                    <FormField id="postalCode" label="Postal code" required error={fieldErrors.postalCode}>
                       <input
                         id="postalCode"
                         value={form.postalCode}
                         onChange={(event) => updateField('postalCode', event.target.value)}
-                        className="form-input mt-1 w-full"
+                        className="velmora-form-field"
+                        autoComplete="postal-code"
                       />
-                      {fieldErrors.postalCode ? (
-                        <p className="text-sm text-red-600 mt-1">{fieldErrors.postalCode}</p>
-                      ) : null}
-                    </div>
-                    <div>
-                      <label className="text-sm text-slate-500" htmlFor="country">
-                        Country
-                      </label>
+                    </FormField>
+                    <FormField id="country" label="Country" required error={fieldErrors.country}>
                       <input
                         id="country"
                         value={form.country}
                         onChange={(event) => updateField('country', event.target.value)}
-                        className="form-input mt-1 w-full"
+                        className="velmora-form-field"
+                        autoComplete="country-name"
                       />
-                      {fieldErrors.country ? (
-                        <p className="text-sm text-red-600 mt-1">{fieldErrors.country}</p>
-                      ) : null}
-                    </div>
+                    </FormField>
                   </div>
                 </div>
 
@@ -540,117 +403,150 @@ export default function CheckoutPage() {
                     type="button"
                     onClick={handlePrepareCheckout}
                     disabled={customerCheckoutLoading}
-                    className="btn bg-primary hover:bg-primary-dark text-white rounded-md mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="mt-6 rounded-lg bg-primary hover:bg-primary-dark text-white font-semibold px-6 py-3 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
                   >
                     {customerCheckoutLoading
                       ? 'Loading delivery options...'
                       : 'Continue to delivery & payment'}
                   </button>
                 ) : (
-                  <p className="text-sm text-slate-500 mt-4">
-                    Delivery options loaded for this address. Change the address above to
-                    reload options.
+                  <p className="text-sm text-[#64748B] mt-4 leading-relaxed">
+                    Delivery options loaded for this address. Change the address above to reload
+                    options.
                   </p>
                 )}
               </section>
 
-              {renderShippingSection()}
-              {renderPaymentSection()}
+              {customerCheckoutPrepared ? (
+                <section className="velmora-section-panel p-5 sm:p-6">
+                  <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">
+                    Delivery
+                  </h2>
+                  <p className="text-sm text-[#64748B] mb-4">
+                    Shipping calculated from available methods. No delivery dates are estimated here.
+                  </p>
 
-              <section className="rounded-md border border-slate-100 dark:border-gray-800 p-6">
-                <label className="text-sm text-slate-500" htmlFor="notes">
-                  Order notes (optional)
-                </label>
-                <textarea
-                  id="notes"
-                  rows={3}
-                  value={form.notes}
-                  onChange={(event) => updateField('notes', event.target.value)}
-                  className="form-input mt-1 w-full"
-                />
+                  {!customerCheckoutLoading &&
+                  customerShippingEnabled &&
+                  customerShippingOptions.length === 0 ? (
+                    <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                      No shipping methods are available for this address. Try a different address or
+                      contact the store.
+                    </div>
+                  ) : (
+                    <MethodOptionList
+                      name="checkout-shipping-method"
+                      options={customerShippingOptions}
+                      selectedId={selectedShippingMethod.id}
+                      selectingId={selectingShippingId}
+                      onSelect={handleSelectShipping}
+                      currencySymbol={currencySymbol}
+                      loading={customerCheckoutLoading}
+                      loadingMessage="Loading shipping methods..."
+                      emptyMessage={
+                        !customerShippingEnabled
+                          ? 'Shipping is not enabled for this store.'
+                          : null
+                      }
+                    />
+                  )}
+                </section>
+              ) : null}
+
+              {customerCheckoutPrepared ? (
+                <section className="velmora-section-panel p-5 sm:p-6">
+                  <h2 className="text-lg font-bold text-[#111827] dark:text-white mb-1">Payment</h2>
+                  <p className="text-sm text-[#64748B] mb-4">
+                    Select a payment method. This store does not process live card payments in the
+                    browser — your selection is recorded with the order.
+                  </p>
+
+                  {!customerCheckoutLoading && customerPaymentOptions.length === 0 ? (
+                    <div className="rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                      No payment methods are available. Please contact the store.
+                    </div>
+                  ) : (
+                    <MethodOptionList
+                      name="checkout-payment-method"
+                      options={customerPaymentOptions}
+                      selectedId={selectedPaymentMethod.id}
+                      selectingId={selectingPaymentId}
+                      onSelect={handleSelectPayment}
+                      currencySymbol={currencySymbol}
+                      loading={customerCheckoutLoading}
+                      loadingMessage="Loading payment options..."
+                    />
+                  )}
+                </section>
+              ) : null}
+
+              <section className="velmora-section-panel p-5 sm:p-6">
+                <FormField id="notes" label="Order notes (optional)" error={null}>
+                  <textarea
+                    id="notes"
+                    rows={3}
+                    value={form.notes}
+                    onChange={(event) => updateField('notes', event.target.value)}
+                    className="velmora-form-field resize-y min-h-24"
+                    placeholder="Special instructions for your order"
+                  />
+                </FormField>
               </section>
+
+              <div className="lg:hidden">
+                <CheckoutTrustNotes />
+              </div>
             </div>
 
-            <div className="md:w-1/3 mt-8 md:mt-0">
-              <div className="sticky top-20 rounded-md bg-slate-50 dark:bg-slate-800 p-6 shadow-sm">
-                <h5 className="text-xl font-medium mb-4">Order Summary</h5>
-
-                <ul className="list-none space-y-3 text-sm mb-4">
-                  {items.map((item) => (
-                    <li key={item.productId} className="flex justify-between gap-3">
-                      <span className="text-slate-600">
-                        {item.name} × {item.quantity}
-                      </span>
-                      <span>{formatProductPrice(item.total, currencySymbol)}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul className="list-none space-y-3 text-sm border-t border-slate-200 dark:border-gray-700 pt-4">
-                  <li className="flex justify-between">
-                    <span className="text-slate-500">Subtotal</span>
-                    <span>{formatProductPrice(subtotal, currencySymbol)}</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-slate-500">Delivery Fee</span>
-                    <span>{formatProductPrice(shippingAmount, currencySymbol)}</span>
-                  </li>
-                  {discountAmount > 0 ? (
-                    <li className="flex justify-between">
-                      <span className="text-slate-500">Discount</span>
-                      <span>-{formatProductPrice(discountAmount, currencySymbol)}</span>
-                    </li>
-                  ) : null}
-                  {selectedShippingMethod.name ? (
-                    <li className="text-slate-500 text-xs">
-                      Shipping Method: {selectedShippingMethod.name}
-                    </li>
-                  ) : null}
-                  {selectedPaymentMethod.name ? (
-                    <li className="text-slate-500 text-xs">
-                      Payment Option: {selectedPaymentMethod.name}
-                    </li>
-                  ) : null}
-                  <li className="flex justify-between font-medium text-base pt-3 border-t border-slate-200 dark:border-gray-700">
-                    <span>Total</span>
-                    <span>{formatProductPrice(totalAmount, currencySymbol)}</span>
-                  </li>
-                </ul>
-
+            <div className="lg:col-span-5 xl:col-span-4 space-y-4 lg:sticky lg:top-24">
+              <OrderSummaryCard
+                items={items}
+                itemCount={itemCount}
+                subtotal={subtotal}
+                shippingAmount={shippingAmount}
+                discountAmount={discountAmount}
+                totalAmount={totalAmount}
+                currencySymbol={currencySymbol}
+                selectedShippingMethod={selectedShippingMethod}
+                selectedPaymentMethod={selectedPaymentMethod}
+                shippingNote="Shipping is calculated from the methods available for your address."
+              >
                 {fieldErrors.shipping || fieldErrors.payment ? (
-                  <div className="text-sm text-red-600 mt-4 space-y-1">
+                  <div className="text-sm text-red-600 space-y-1">
                     {fieldErrors.shipping ? <p>{fieldErrors.shipping}</p> : null}
                     {fieldErrors.payment ? <p>{fieldErrors.payment}</p> : null}
                   </div>
                 ) : null}
 
                 {!customerCheckoutPrepared ? (
-                  <p className="text-sm text-slate-500 mt-4">
-                    Enter your details and continue to delivery & payment before placing your
-                    order.
+                  <p className="text-sm text-[#64748B] leading-relaxed">
+                    Enter your details and continue to delivery & payment before placing your order.
                   </p>
                 ) : null}
 
                 <button
                   type="submit"
                   disabled={checkoutSubmitting || !canPlaceOrder}
-                  className="btn bg-primary hover:bg-primary-dark text-white rounded-md w-full mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg bg-[#F59E0B] hover:bg-[#d97706] text-white font-semibold py-3 px-4 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {checkoutSubmitting ? 'Placing order...' : 'Place Order'}
+                  {checkoutSubmitting ? 'Placing order...' : 'Place order'}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => refreshCart()}
-                  className="text-sm text-primary hover:underline mt-4 block mx-auto"
+                  className="text-sm font-semibold text-primary hover:underline block mx-auto"
                 >
                   Refresh cart totals
                 </button>
+              </OrderSummaryCard>
+
+              <div className="hidden lg:block">
+                <CheckoutTrustNotes />
               </div>
             </div>
           </form>
-        </div>
-      </section>
+      </StorePageShell>
       <Footer />
       <Switcher />
     </>

@@ -304,8 +304,8 @@ export function CartProvider({ children }) {
         setCustomerPaymentOptions(mappedPayment.paymentOptions)
         setCustomerShippingEnabled(mappedShipping.shippingEnabled)
 
-        let shippingMethodId = cartState.selectedShippingMethod.id
-        let paymentMethodId = cartState.selectedPaymentMethod.id
+        let shippingMethodId = cartState.selectedShippingMethod?.id || ''
+        let paymentMethodId = cartState.selectedPaymentMethod?.id || ''
 
         if (mappedShipping.shippingEnabled && mappedShipping.shippingOptions.length > 0) {
           const shippingStillValid = mappedShipping.shippingOptions.some(
@@ -361,8 +361,8 @@ export function CartProvider({ children }) {
       }
     },
     [
-      cartState.selectedPaymentMethod.id,
-      cartState.selectedShippingMethod.id,
+      cartState.selectedPaymentMethod,
+      cartState.selectedShippingMethod,
       clearCustomerCheckout,
       selectPaymentMethod,
       selectShippingMethod,
@@ -432,10 +432,10 @@ export function CartProvider({ children }) {
         setCustomerShippingEnabled(mappedShipping.shippingEnabled)
         setCheckoutCustomerId(customerId)
 
-        let shippingMethodId = cartState.selectedShippingMethod.id
-        let shippingMethodCode = cartState.selectedShippingMethod.code
-        let paymentMethodId = cartState.selectedPaymentMethod.id
-        let paymentMethodCode = cartState.selectedPaymentMethod.code
+        let shippingMethodId = cartState.selectedShippingMethod?.id || ''
+        let shippingMethodCode = cartState.selectedShippingMethod?.code || ''
+        let paymentMethodId = cartState.selectedPaymentMethod?.id || ''
+        let paymentMethodCode = cartState.selectedPaymentMethod?.code || ''
 
         const shippingRequired =
           mappedShipping.shippingEnabled && mappedShipping.shippingOptions.length > 0

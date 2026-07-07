@@ -1,141 +1,191 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { FiHeadphones, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 
-import Navbar from "../../component/navbar";
-import Footer from "../../component/footer";
-import Switcher from "../../component/switcher";
+import Navbar from '../../component/navbar'
+import Footer from '../../component/footer'
+import Switcher from '../../component/switcher'
+import StorePageShell from '../../component/layout/StorePageShell.jsx'
+import PageHeader from '../../component/layout/PageHeader.jsx'
+import { getPublicSettings } from '../../api/publicSettingsApi.js'
+import { DEFAULT_STORE_NAME } from '../../lib/productMappers.js'
+import { formatDocumentTitle, getDefaultDocumentTitle } from '../../lib/pageTitle.js'
 
-import ContactImage from "../../assets/images/svg/contact.svg";
-import { FiHexagon, FiMapPin } from "react-icons/fi";
-import { BsTelephone } from "react-icons/bs";
-import { MdMailOutline } from "react-icons/md";
+const formatStoreAddress = (address = {}) => {
+  const parts = [
+    address.street || address.line1,
+    address.line2,
+    [address.city, address.state].filter(Boolean).join(', '),
+    address.postalCode,
+    address.country,
+  ].filter((part) => Boolean(part && String(part).trim()))
 
-export default function Contact() {
-    return (
-        <>
-            <Navbar />
-            {/* <!-- Google Map --> */}
-            <div className="container-fluid relative mt-20">
-                <div className="grid grid-cols-1">
-                    <div className="w-full leading-0 border-0">
-                        <iframe title="contact-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" style={{ border: '0' }} className="w-full h-125" allowFullScreen></iframe>
-                    </div>
-                </div>
-            </div>
-            {/* <!-- Google Map --> */}
-
-            {/* <!-- Start Section--> */}
-            <section className="relative lg:py-24 py-16">
-                <div className="container">
-                    <div className="grid md:grid-cols-12 grid-cols-1 items-center gap-7.5">
-                        <div className="lg:col-span-7 md:col-span-6">
-                            <img src={ContactImage} alt="" />
-                        </div>
-
-                        <div className="lg:col-span-5 md:col-span-6">
-                            <div className="lg:me-5">
-                                <div className="bg-white dark:bg-slate-900 rounded-md shadow-sm shadow-gray-200 dark:shadow-gray-700 p-6">
-                                    <h3 className="mb-6 text-2xl leading-normal font-medium">Get in touch !</h3>
-
-                                    <form method="post" name="myForm" id="myForm" >
-                                        <p className="mb-0" id="error-msg"></p>
-                                        <div id="simple-msg"></div>
-                                        <div className="grid lg:grid-cols-12 lg:gap-6">
-                                            <div className="lg:col-span-6 mb-5">
-                                                <label htmlFor="name" className="font-medium">Your Name:</label>
-                                                <input name="name" id="name" type="text" className="form-input border border-gray-200! dark:border-gray-800! mt-2" placeholder="Name :" />
-                                            </div>
-
-                                            <div className="lg:col-span-6 mb-5">
-                                                <label htmlFor="email" className="font-medium">Your Email:</label>
-                                                <input name="email" id="email" type="email" className="form-input border border-gray-200! dark:border-gray-800! mt-2" placeholder="Email :" />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-1">
-                                            <div className="mb-5">
-                                                <label htmlFor="subject" className="font-medium">Your Question:</label>
-                                                <input name="subject" id="subject" className="form-input border border-gray-200! dark:border-gray-800! mt-2" placeholder="Subject :" />
-                                            </div>
-
-                                            <div className="mb-5">
-                                                <label htmlFor="comments" className="font-medium">Your Comment:</label>
-                                                <textarea name="comments" id="comments" className="form-input border border-gray-200! dark:border-gray-800! mt-2 textarea" placeholder="Message :"></textarea>
-                                            </div>
-                                        </div>
-                                        <button type="submit" id="submit" name="send" className="btn bg-primary hover:bg-primary-dark text-white rounded-md">Send Message</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="container lg:mt-24 mt-16">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-7.5">
-                        <div className="text-center px-6">
-                            <div className="relative overflow-hidden text-transparent -m-3">
-                                <FiHexagon className="size-32 fill-primary/5 mx-auto" />
-                                <div className="absolute top-2/4 -translate-y-2/4 inset-s-0 inset-e-0 mx-auto text-primary rounded-xl transition-all duration-500 ease-in-out text-4xl flex align-middle justify-center items-center">
-                                    <BsTelephone className="text-3xl"/>
-                                </div>
-                            </div>
-
-                            <div className="content mt-7">
-                                <h5 className="title h5 text-xl font-medium">Phone</h5>
-                                <p className="text-slate-400 mt-3">The phrasal sequence of the is now so that many campaign and benefit</p>
-
-                                <div className="mt-5">
-                                    <Link to="tel:+152534-468-854" className="btn btn-link text-primary hover:text-primary after:bg-primary transition duration-500">+152 534-468-854</Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="text-center px-6">
-                            <div className="relative overflow-hidden text-transparent -m-3">
-                                <FiHexagon className="size-32 fill-primary/5 mx-auto" />
-                                <div className="absolute top-2/4 -translate-y-2/4 inset-s-0 inset-e-0 mx-auto text-primary rounded-xl transition-all duration-500 ease-in-out text-4xl flex align-middle justify-center items-center">
-                                    <MdMailOutline className="text-3xl"/>
-                                </div>
-                            </div>
-
-                            <div className="content mt-7">
-                                <h5 className="title h5 text-xl font-medium">Email</h5>
-                                <p className="text-slate-400 mt-3">The phrasal sequence of the is now so that many campaign and benefit</p>
-
-                                <div className="mt-5">
-                                    <Link to="mailto:contact@example.com" className="btn btn-link text-primary hover:text-primary after:bg-primary transition duration-500">contact@example.com</Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="text-center px-6">
-                            <div className="relative overflow-hidden text-transparent -m-3">
-                                <FiHexagon className="size-32 fill-primary/5 mx-auto" />
-                                <div className="absolute top-2/4 -translate-y-2/4 inset-s-0 inset-e-0 mx-auto text-primary rounded-xl transition-all duration-500 ease-in-out text-4xl flex align-middle justify-center items-center">
-                                    <FiMapPin className="text-3xl"/>
-                                </div>
-                            </div>
-
-                            <div className="content mt-7">
-                                <h5 className="title h5 text-xl font-medium">Location</h5>
-                                <p className="text-slate-400 mt-3">C/54 Northwest Freeway, Suite 558, <br /> Houston, USA 485</p>
-
-                                <div className="mt-5">
-                                    <Link to="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin"
-                                        data-type="iframe" className="video-play-icon read-more lightbox btn btn-link text-primary hover:text-primary after:bg-primary transition duration-500">View on Google map</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            {/* <!-- End Section--> */}
-
-            <Footer />
-            <Switcher />
-        </>
-    );
-
+  return parts.join(', ')
 }
 
+export default function Contact() {
+  const [storeSettings, setStoreSettings] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    document.title = formatDocumentTitle('Contact')
+
+    let active = true
+
+    const loadSettings = async () => {
+      try {
+        const settings = await getPublicSettings()
+        if (active) setStoreSettings(settings || null)
+      } catch {
+        if (active) setStoreSettings(null)
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    loadSettings()
+
+    return () => {
+      active = false
+      document.title = getDefaultDocumentTitle()
+    }
+  }, [])
+
+  const storeName = storeSettings?.storeName?.trim() || DEFAULT_STORE_NAME
+  const storeEmail = storeSettings?.storeEmail || ''
+  const storePhone = storeSettings?.storePhone || ''
+  const storeAddress = formatStoreAddress(storeSettings?.address)
+
+  return (
+    <>
+      <Navbar />
+      <StorePageShell containerClassName="pb-12">
+        <PageHeader
+          title={`Contact ${storeName}`}
+          subtitle="Questions about products, orders, or delivery? Reach our store team using the details below."
+        />
+
+        <div className="grid lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-7 velmora-section-panel p-6 md:p-8">
+            <h2 className="text-lg font-bold text-[#111827] dark:text-white">Customer support</h2>
+            <p className="text-sm text-[#64748B] mt-2 leading-relaxed">
+              Orders are placed online through checkout. For help with an existing order, include
+              your order number when you contact us.
+            </p>
+
+            {loading ? (
+              <p className="text-[#64748B] text-sm mt-6">Loading store contact details...</p>
+            ) : (
+              <ul className="list-none space-y-5 mt-6 p-0 m-0">
+                {storeEmail ? (
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0">
+                      <FiMail className="size-4.5" />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+                        Email
+                      </p>
+                      <Link
+                        to={`mailto:${storeEmail}`}
+                        className="text-primary hover:underline font-medium text-sm mt-1 inline-block"
+                      >
+                        {storeEmail}
+                      </Link>
+                    </div>
+                  </li>
+                ) : null}
+                {storePhone ? (
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0">
+                      <FiPhone className="size-4.5" />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+                        Phone
+                      </p>
+                      <Link
+                        to={`tel:${storePhone}`}
+                        className="text-primary hover:underline font-medium text-sm mt-1 inline-block"
+                      >
+                        {storePhone}
+                      </Link>
+                    </div>
+                  </li>
+                ) : null}
+                {storeAddress ? (
+                  <li className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0">
+                      <FiMapPin className="size-4.5" />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+                        Address
+                      </p>
+                      <p className="text-sm text-[#111827] dark:text-slate-200 mt-1 leading-relaxed">
+                        {storeAddress}
+                      </p>
+                    </div>
+                  </li>
+                ) : null}
+                {!storeEmail && !storePhone && !storeAddress ? (
+                  <li className="text-sm text-[#64748B] leading-relaxed">
+                    Store contact details are not configured yet. You can still browse products and
+                    place orders online.
+                  </li>
+                ) : null}
+              </ul>
+            )}
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/shop" className="velmora-btn-primary">
+                Continue shopping
+              </Link>
+              <Link
+                to="/cart"
+                className="inline-flex items-center justify-center rounded-lg border border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm px-5 py-2.5 transition-colors"
+              >
+                View cart
+              </Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 space-y-4">
+            <div className="velmora-section-panel p-6">
+              <div className="flex items-start gap-3">
+                <FiHeadphones className="size-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-bold text-[#111827] dark:text-white">
+                    Support available
+                  </h3>
+                  <p className="text-xs text-[#64748B] mt-2 leading-relaxed">
+                    We help with product questions, order updates, delivery, and returns when contact
+                    details are configured in admin store settings.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200/80 dark:border-gray-800 bg-[#111827] p-6 text-white">
+              <p className="text-[#F59E0B] text-xs font-bold uppercase tracking-widest">
+                Guest checkout
+              </p>
+              <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                No account is required. Add items to cart, enter your details at checkout, and place
+                your order securely.
+              </p>
+              <Link
+                to="/shop"
+                className="inline-block mt-4 text-sm font-semibold text-white hover:text-[#F59E0B]"
+              >
+                Browse the shop →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </StorePageShell>
+      <Footer />
+      <Switcher />
+    </>
+  )
+}
