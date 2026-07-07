@@ -1850,6 +1850,26 @@ body:has(#topnav.velmora-ecommerce-header) .mt-20 {
    background: linear-gradient(160deg, #111827 0%, #1e3a8a 48%, #2563eb 100%);
 }
 
+.velmora-maintenance-page {
+   min-height: 100vh;
+}
+
+.velmora-switcher-theme {
+   left: 16px;
+   bottom: 96px;
+}
+
+.velmora-switcher-rtl {
+   left: 12px;
+   bottom: 176px;
+}
+
+@media (max-width: 640px) {
+   .velmora-switcher-theme {
+      bottom: 80px;
+   }
+}
+
 .velmora-footer {
    margin-top: 3rem;
    background: #0b1220;

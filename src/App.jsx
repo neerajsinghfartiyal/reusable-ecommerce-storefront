@@ -28,6 +28,7 @@ import OrderSuccessPage from "./pages/checkout/OrderSuccessPage";
 import CategoriesPage from "./pages/categories/CategoriesPage";
 import { CartProvider } from "./context/CartContext.jsx";
 import StoreBrandingEffect from "./component/StoreBrandingEffect.jsx";
+import MaintenanceGate from "./component/MaintenanceGate.jsx";
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
             <CartProvider>
             <StoreBrandingEffect />
             <ScrollToTop />
+            <MaintenanceGate>
             <Routes >
               <Route path="/" element={<Index />} />
               <Route path="/index" element={<Index />} />
@@ -106,6 +108,7 @@ function App() {
               <Route path="/404" element={<Page404/>} />
       
             </Routes>
+            </MaintenanceGate>
             </CartProvider>
           </BrowserRouter >
     </>
