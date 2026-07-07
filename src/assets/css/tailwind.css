@@ -1569,6 +1569,147 @@ body:has(#topnav.velmora-ecommerce-header) .mt-20 {
    background: rgb(15 23 42);
 }
 
+.velmora-order-success-hero {
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 1rem;
+   background: #ffffff;
+   box-shadow: 0 4px 16px rgb(15 23 42 / 0.06);
+   padding: 2rem 1.5rem;
+   text-align: center;
+}
+
+.dark .velmora-order-success-hero {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-order-card {
+   border: 1px solid rgb(226 232 240 / 0.95);
+   border-radius: 1rem;
+   background: #ffffff;
+   box-shadow: 0 4px 16px rgb(15 23 42 / 0.04);
+   padding: 1.25rem 1.5rem;
+}
+
+.dark .velmora-order-card {
+   border-color: rgb(55 65 81);
+   background: rgb(15 23 42);
+}
+
+.velmora-order-card-muted {
+   background: rgb(248 250 252 / 0.9);
+}
+
+.dark .velmora-order-card-muted {
+   background: rgb(30 41 59 / 0.55);
+}
+
+.velmora-order-card-title {
+   font-size: 1rem;
+   font-weight: 700;
+   color: #111827;
+   margin-bottom: 0.75rem;
+}
+
+.dark .velmora-order-card-title {
+   color: #ffffff;
+}
+
+.velmora-order-status-badge {
+   display: inline-flex;
+   align-items: center;
+   border-radius: 9999px;
+   padding: 0.25rem 0.625rem;
+   font-size: 0.6875rem;
+   font-weight: 700;
+   letter-spacing: 0.02em;
+   text-transform: capitalize;
+}
+
+.velmora-order-status-badge.is-amber {
+   background: rgb(251 191 36 / 0.15);
+   color: #b45309;
+}
+
+.velmora-order-status-badge.is-blue,
+.velmora-order-status-badge.is-indigo,
+.velmora-order-status-badge.is-sky {
+   background: rgb(37 99 235 / 0.12);
+   color: #1d4ed8;
+}
+
+.velmora-order-status-badge.is-purple {
+   background: rgb(168 85 247 / 0.12);
+   color: #7e22ce;
+}
+
+.velmora-order-status-badge.is-green {
+   background: rgb(16 185 129 / 0.12);
+   color: #047857;
+}
+
+.velmora-order-status-badge.is-red,
+.velmora-order-status-badge.is-rose {
+   background: rgb(244 63 94 / 0.12);
+   color: #be123c;
+}
+
+.velmora-order-status-badge.is-orange {
+   background: rgb(249 115 22 / 0.12);
+   color: #c2410c;
+}
+
+.velmora-order-status-badge.is-slate {
+   background: rgb(148 163 184 / 0.18);
+   color: #475569;
+}
+
+.velmora-order-timeline {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+}
+
+.velmora-order-timeline-item {
+   display: grid;
+   grid-template-columns: 1rem 1fr;
+   gap: 0.75rem 1rem;
+   padding-bottom: 1.25rem;
+   position: relative;
+}
+
+.velmora-order-timeline-item:not(:last-child)::before {
+   content: '';
+   position: absolute;
+   left: 0.4375rem;
+   top: 1.25rem;
+   bottom: 0;
+   width: 2px;
+   background: rgb(226 232 240);
+}
+
+.dark .velmora-order-timeline-item:not(:last-child)::before {
+   background: rgb(55 65 81);
+}
+
+.velmora-order-timeline-marker {
+   width: 0.875rem;
+   height: 0.875rem;
+   margin-top: 0.2rem;
+   border-radius: 9999px;
+   border: 2px solid #ffffff;
+   background: rgb(148 163 184);
+}
+
+.velmora-order-timeline-item.is-complete .velmora-order-timeline-marker {
+   background: #10b981;
+}
+
+.velmora-order-timeline-item.is-current .velmora-order-timeline-marker {
+   background: #2563eb;
+   box-shadow: 0 0 0 4px rgb(37 99 235 / 0.15);
+}
+
 .velmora-method-option.is-selected {
    border-color: #2563eb;
    background: rgb(37 99 235 / 0.05);
