@@ -16,6 +16,7 @@ import { getProductBySlug } from '../../api/catalogApi.js'
 import { getPublicSettings } from '../../api/publicSettingsApi.js'
 import { ApiError } from '../../lib/apiClient.js'
 import {
+  buildDisplayProduct,
   getAtGlanceSpecs,
   getProductHighlights,
   mapProductToDetail,
@@ -35,6 +36,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const [selectedVariantId, setSelectedVariantId] = useState('')
   const [addError, setAddError] = useState('')
   const [addSuccess, setAddSuccess] = useState('')
 
@@ -82,6 +84,7 @@ export default function ProductDetail() {
         const mapped = mapProductToDetail(data)
         setProduct(mapped)
         setQuantity(1)
+        setSelectedVariantId('')
         setAddError('')
         setAddSuccess('')
         trackRecentlyViewedProduct(mapped)
@@ -112,14 +115,38 @@ export default function ProductDetail() {
     }
   }, [slug])
 
+  const displayProduct = useMemo(
+    () => buildDisplayProduct(product, selectedVariantId),
+    [product, selectedVariantId],
+  )
+
+  const handleQuantityChange = (nextQuantity) => {
+    const maxQuantity = Number(displayProduct?.quantity || 0)
+    if (maxQuantity > 0 && nextQuantity > maxQuantity) {
+      setQuantity(maxQuantity)
+      return
+    }
+    setQuantity(nextQuantity)
+  }
+
+  const handleVariantSelect = (variantId) => {
+    setSelectedVariantId(String(variantId))
+    setAddError('')
+    setAddSuccess('')
+    setQuantity(1)
+  }
+
   const handleAddToCart = async () => {
-    if (!product?.id) return
+    if (!product?.id || !displayProduct) return
 
     setAddError('')
     setAddSuccess('')
 
     try {
-      await addToCart(product, { quantity })
+      await addToCart(product, {
+        quantity,
+        variantId: product.hasVariants ? selectedVariantId : undefined,
+      })
       setAddSuccess('Added to cart.')
     } catch (err) {
       setAddError(err?.message || 'Could not add to cart.')
@@ -127,30 +154,38 @@ export default function ProductDetail() {
   }
 
   const handleBuyNow = async () => {
-    if (!product?.id) return
+    if (!product?.id || !displayProduct) return
 
     setAddError('')
     setAddSuccess('')
 
     try {
-      await addToCart(product, { quantity })
+      await addToCart(product, {
+        quantity,
+        variantId: product.hasVariants ? selectedVariantId : undefined,
+      })
       navigate('/cart')
     } catch (err) {
       setAddError(err?.message || 'Could not add to cart.')
     }
   }
 
-  const isAddingThisProduct =
-    isAdding && actionProductId === String(product?.id || '')
+  const cartLineKey = product?.hasVariants
+    ? selectedVariantId
+      ? `${product.id}:${selectedVariantId}`
+      : String(product?.id || '')
+    : String(product?.id || '')
+
+  const isAddingThisProduct = isAdding && actionProductId === cartLineKey
 
   const highlights = useMemo(
-    () => (product ? getProductHighlights(product) : []),
-    [product],
+    () => (displayProduct ? getProductHighlights(displayProduct) : []),
+    [displayProduct],
   )
 
   const atGlanceSpecs = useMemo(
-    () => (product ? getAtGlanceSpecs(product, 4) : []),
-    [product],
+    () => (displayProduct ? getAtGlanceSpecs(displayProduct, 4) : []),
+    [displayProduct],
   )
 
   return (
@@ -179,7 +214,7 @@ export default function ProductDetail() {
           </div>
         ) : null}
 
-        {!loading && product ? (
+        {!loading && product && displayProduct ? (
           <div className="velmora-pdp">
             <nav className="velmora-pdp-breadcrumb" aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-2 list-none p-0 m-0">
@@ -231,12 +266,15 @@ export default function ProductDetail() {
             <section className="velmora-pdp-top" aria-label="Product overview">
               <div className="velmora-pdp-top-grid">
                 <div className="velmora-pdp-top-gallery">
-                  <ProductGallery images={product.images} productName={product.name} />
+                  <ProductGallery
+                    images={displayProduct.images}
+                    productName={displayProduct.name}
+                  />
                 </div>
 
                 <div className="velmora-pdp-top-info">
                   <ProductInfoPanel
-                    product={product}
+                    product={displayProduct}
                     currencySymbol={currencySymbol}
                     highlights={highlights}
                     atGlanceSpecs={atGlanceSpecs}
@@ -244,10 +282,13 @@ export default function ProductDetail() {
 
                   <div className="lg:hidden velmora-pdp-mobile-buy">
                     <ProductPurchaseCard
-                      product={product}
+                      product={displayProduct}
+                      baseProduct={product}
                       currencySymbol={currencySymbol}
                       quantity={quantity}
-                      onQuantityChange={setQuantity}
+                      onQuantityChange={handleQuantityChange}
+                      selectedVariantId={selectedVariantId}
+                      onVariantSelect={handleVariantSelect}
                       onAddToCart={handleAddToCart}
                       onBuyNow={handleBuyNow}
                       isAdding={isAddingThisProduct}
@@ -261,10 +302,13 @@ export default function ProductDetail() {
                 <div className="velmora-pdp-top-buy hidden lg:block">
                   <div className="velmora-pdp-buy-sticky">
                     <ProductPurchaseCard
-                      product={product}
+                      product={displayProduct}
+                      baseProduct={product}
                       currencySymbol={currencySymbol}
                       quantity={quantity}
-                      onQuantityChange={setQuantity}
+                      onQuantityChange={handleQuantityChange}
+                      selectedVariantId={selectedVariantId}
+                      onVariantSelect={handleVariantSelect}
                       onAddToCart={handleAddToCart}
                       onBuyNow={handleBuyNow}
                       isAdding={isAddingThisProduct}
@@ -280,7 +324,7 @@ export default function ProductDetail() {
             </section>
 
             <div className="velmora-pdp-below">
-              <ProductDetailsSections product={product} currencySymbol={currencySymbol} />
+              <ProductDetailsSections product={displayProduct} currencySymbol={currencySymbol} />
             </div>
 
             <RelatedProducts

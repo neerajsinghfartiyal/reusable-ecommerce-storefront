@@ -32,9 +32,15 @@ export default function OrderSummaryCard({
         {showLineItems && items.length > 0 ? (
           <ul className="list-none space-y-3 text-sm max-h-48 overflow-y-auto">
             {items.map((item) => (
-              <li key={item.productId} className="flex justify-between gap-3">
-                <span className="text-[#64748B] line-clamp-2 min-w-0">
-                  {item.name}
+              <li key={item.lineKey || item.productId} className="flex justify-between gap-3">
+                <span className="text-[#64748B] line-clamp-3 min-w-0">
+                  <span className="block text-[#111827] dark:text-white font-medium">{item.name}</span>
+                  {item.variantTitle ? (
+                    <span className="block text-xs mt-0.5">{item.variantTitle}</span>
+                  ) : null}
+                  {item.variantOptionsLabel ? (
+                    <span className="block text-xs mt-0.5">{item.variantOptionsLabel}</span>
+                  ) : null}
                   <span className="text-[#111827] dark:text-white font-medium">
                     {' '}
                     × {item.quantity}

@@ -2,12 +2,16 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FiCreditCard, FiLock, FiTruck } from 'react-icons/fi'
 import { formatProductPrice } from '../../lib/productMappers.js'
+import ProductVariantSelector from './ProductVariantSelector.jsx'
 
 export default function ProductPurchaseCard({
   product,
+  baseProduct,
   currencySymbol,
   quantity,
   onQuantityChange,
+  selectedVariantId = '',
+  onVariantSelect,
   onAddToCart,
   onBuyNow,
   isAdding,
@@ -18,6 +22,10 @@ export default function ProductPurchaseCard({
 }) {
   if (!product) return null
 
+  const variantSource = baseProduct || product
+  const hasVariants = Boolean(variantSource?.hasVariants && variantSource?.variants?.length)
+  const requiresSelection = hasVariants && product.requiresVariantSelection
+  const canPurchase = product.inStock && !requiresSelection
   const maxQuantity = product.quantity > 0 ? product.quantity : 1
 
   return (
@@ -29,16 +37,21 @@ export default function ProductPurchaseCard({
             <span className="velmora-pdp-price-main text-2xl">
               {formatProductPrice(product.price, currencySymbol)}
             </span>
+            {product.compareAtPrice != null ? (
+              <span className="velmora-pdp-price-mrp text-sm line-through text-[#64748B]">
+                {formatProductPrice(product.compareAtPrice, currencySymbol)}
+              </span>
+            ) : null}
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
             <span
               className={`velmora-pdp-stock-chip ${
-                product.inStock ? 'is-in-stock' : 'is-out-of-stock'
+                product.inStock && !requiresSelection ? 'is-in-stock' : 'is-out-of-stock'
               }`}
             >
               {product.availabilityLabel}
             </span>
-            {product.inStock && product.quantity > 0 ? (
+            {canPurchase && product.quantity > 0 ? (
               <span className="text-xs font-semibold text-[#64748B]">{product.quantity} in stock</span>
             ) : null}
           </div>
@@ -49,12 +62,12 @@ export default function ProductPurchaseCard({
           <div className="mt-2 flex items-center justify-between gap-3">
             <span
               className={`velmora-pdp-stock-chip ${
-                product.inStock ? 'is-in-stock' : 'is-out-of-stock'
+                product.inStock && !requiresSelection ? 'is-in-stock' : 'is-out-of-stock'
               }`}
             >
               {product.availabilityLabel}
             </span>
-            {product.inStock && product.quantity > 0 ? (
+            {canPurchase && product.quantity > 0 ? (
               <span className="text-xs font-semibold text-[#64748B]">{product.quantity} available</span>
             ) : null}
           </div>
@@ -62,10 +75,18 @@ export default function ProductPurchaseCard({
       )}
 
       <div className="velmora-pdp-buybox-body">
-        {product.variations?.length > 0 ? (
-          <p className="text-xs text-amber-900 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-200 rounded-lg px-3 py-2 leading-relaxed border border-amber-200/80 dark:border-amber-800/50">
-            Variant-specific cart selection is not enabled yet. The main product listing will be
-            added to your cart.
+        {hasVariants ? (
+          <ProductVariantSelector
+            variants={variantSource.variants}
+            selectedVariantId={selectedVariantId}
+            onSelect={onVariantSelect}
+            currencySymbol={currencySymbol}
+          />
+        ) : null}
+
+        {requiresSelection ? (
+          <p className="text-sm text-[#64748B] bg-slate-50 dark:bg-slate-900/40 rounded-lg px-3 py-2 border border-slate-200/80 dark:border-slate-800">
+            Please select an option
           </p>
         ) : null}
 
@@ -76,7 +97,7 @@ export default function ProductPurchaseCard({
           <div className="velmora-pdp-qty-control">
             <button
               type="button"
-              disabled={quantity <= 1 || isAdding}
+              disabled={quantity <= 1 || isAdding || requiresSelection}
               onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
               className="velmora-pdp-qty-btn"
               aria-label="Decrease quantity"
@@ -89,6 +110,7 @@ export default function ProductPurchaseCard({
               min={1}
               max={maxQuantity}
               value={quantity}
+              disabled={requiresSelection}
               onChange={(event) => {
                 const next = Number(event.target.value)
                 if (!Number.isFinite(next) || next < 1) {
@@ -103,7 +125,11 @@ export default function ProductPurchaseCard({
             />
             <button
               type="button"
-              disabled={isAdding || (product.quantity > 0 && quantity >= product.quantity)}
+              disabled={
+                isAdding ||
+                requiresSelection ||
+                (product.quantity > 0 && quantity >= product.quantity)
+              }
               onClick={() =>
                 onQuantityChange(
                   product.quantity > 0 ? Math.min(quantity + 1, product.quantity) : quantity + 1,
@@ -128,20 +154,20 @@ export default function ProductPurchaseCard({
 
         <button
           type="button"
-          disabled={!product.inStock || isAdding}
+          disabled={!canPurchase || isAdding}
           onClick={onAddToCart}
           className="velmora-pdp-btn-cart"
         >
-          {isAdding ? 'Adding...' : 'Add to Cart'}
+          {isAdding ? 'Adding...' : hasVariants && requiresSelection ? 'Choose options' : 'Add to Cart'}
         </button>
 
         <button
           type="button"
-          disabled={!product.inStock || isAdding}
+          disabled={!canPurchase || isAdding}
           onClick={onBuyNow}
           className="velmora-pdp-btn-buy"
         >
-          {isAdding ? 'Please wait...' : 'Buy Now'}
+          {isAdding ? 'Please wait...' : hasVariants && requiresSelection ? 'Choose options' : 'Buy Now'}
         </button>
 
         {addSuccess ? (

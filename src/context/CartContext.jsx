@@ -534,9 +534,16 @@ export function CartProvider({ children }) {
     async (product, options = {}) => {
       const productId = product?.id || product?._id || product?.productId
       const quantity = Number(options.quantity ?? 1)
+      const variantId = options.variantId ? String(options.variantId) : ''
 
       if (!productId) {
         const message = 'Product is missing an ID.'
+        setError(message)
+        throw new Error(message)
+      }
+
+      if (product?.hasVariants && !variantId) {
+        const message = 'Please select an option before adding this product to your cart.'
         setError(message)
         throw new Error(message)
       }
@@ -547,11 +554,15 @@ export function CartProvider({ children }) {
         throw new Error(message)
       }
 
-      setActionProductId(String(productId))
+      const lineKey = variantId ? `${productId}:${variantId}` : String(productId)
+      setActionProductId(lineKey)
       setError('')
 
       try {
-        const cart = await addCartItem(sessionId, { productId, quantity })
+        const payload = { productId, quantity }
+        if (variantId) payload.variantId = variantId
+
+        const cart = await addCartItem(sessionId, payload)
         applyCartResponse(cart)
         if (cart?.items?.length) {
           loadCheckoutOptions().catch(() => {
@@ -560,9 +571,13 @@ export function CartProvider({ children }) {
         }
         return cart
       } catch (err) {
-        const message = err?.message || 'Could not add item to cart.'
+        const message =
+          err?.message ||
+          (product?.hasVariants
+            ? 'Please choose an option for this product before adding it to your cart.'
+            : 'Could not add item to cart.')
         setError(message)
-        throw err
+        throw err instanceof Error ? err : new Error(message, { cause: err })
       } finally {
         setActionProductId('')
       }
@@ -571,9 +586,13 @@ export function CartProvider({ children }) {
   )
 
   const updateQuantity = useCallback(
-    async (productId, quantity) => {
+    async (productId, quantity, variantId = '') => {
       const normalizedId = String(productId)
       const nextQuantity = Number(quantity)
+      const normalizedVariantId = variantId ? String(variantId) : ''
+      const lineKey = normalizedVariantId
+        ? `${normalizedId}:${normalizedVariantId}`
+        : normalizedId
 
       if (!normalizedId) {
         const message = 'Cart item is missing a product ID.'
@@ -581,13 +600,14 @@ export function CartProvider({ children }) {
         throw new Error(message)
       }
 
-      setActionProductId(normalizedId)
+      setActionProductId(lineKey)
       setError('')
 
       try {
-        const cart = await updateCartItem(sessionId, normalizedId, {
-          quantity: nextQuantity,
-        })
+        const payload = { quantity: nextQuantity }
+        if (normalizedVariantId) payload.variantId = normalizedVariantId
+
+        const cart = await updateCartItem(sessionId, normalizedId, payload)
         applyCartResponse(cart)
         if (!cart?.items?.length) {
           clearCheckoutOptions()
@@ -607,8 +627,12 @@ export function CartProvider({ children }) {
   )
 
   const removeItem = useCallback(
-    async (productId) => {
+    async (productId, variantId = '') => {
       const normalizedId = String(productId)
+      const normalizedVariantId = variantId ? String(variantId) : ''
+      const lineKey = normalizedVariantId
+        ? `${normalizedId}:${normalizedVariantId}`
+        : normalizedId
 
       if (!normalizedId) {
         const message = 'Cart item is missing a product ID.'
@@ -616,11 +640,13 @@ export function CartProvider({ children }) {
         throw new Error(message)
       }
 
-      setActionProductId(normalizedId)
+      setActionProductId(lineKey)
       setError('')
 
       try {
-        const cart = await removeCartItem(sessionId, normalizedId)
+        const cart = await removeCartItem(sessionId, normalizedId, {
+          variantId: normalizedVariantId || undefined,
+        })
         applyCartResponse(cart)
         if (!cart?.items?.length) {
           clearCheckoutOptions()

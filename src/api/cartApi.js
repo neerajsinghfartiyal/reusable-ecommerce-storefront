@@ -10,23 +10,27 @@ export const getCart = (sessionId) => apiGet(cartPath(sessionId))
 
 /**
  * POST /api/cart/:sessionId/items
- * @param {{ productId: string, quantity: number }} item
+ * @param {{ productId: string, quantity: number, variantId?: string }} item
  */
 export const addCartItem = (sessionId, item) =>
   apiPost(`${cartPath(sessionId)}/items`, item)
 
 /**
  * PUT /api/cart/:sessionId/items/:productId
- * @param {{ quantity: number }} payload
+ * @param {{ quantity: number, variantId?: string }} payload
  */
 export const updateCartItem = (sessionId, productId, payload) =>
   apiPut(`${cartPath(sessionId)}/items/${encodeURIComponent(productId)}`, payload)
 
 /**
  * DELETE /api/cart/:sessionId/items/:productId
+ * @param {{ variantId?: string }} [options]
  */
-export const removeCartItem = (sessionId, productId) =>
-  apiDelete(`${cartPath(sessionId)}/items/${encodeURIComponent(productId)}`)
+export const removeCartItem = (sessionId, productId, options = {}) => {
+  const variantId = options?.variantId
+  const query = variantId ? buildQueryString({ variantId }) : ''
+  return apiDelete(`${cartPath(sessionId)}/items/${encodeURIComponent(productId)}${query}`)
+}
 
 /**
  * DELETE /api/cart/:sessionId

@@ -1400,6 +1400,90 @@ body:has(#topnav.velmora-ecommerce-header) .mt-20 {
    font-size: 0.75rem;
 }
 
+.velmora-pdp-variant-selector {
+   display: grid;
+   gap: 0.75rem;
+}
+
+.velmora-pdp-variant-selector-title {
+   margin: 0;
+   font-size: 0.875rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.dark .velmora-pdp-variant-selector-title {
+   color: #f8fafc;
+}
+
+.velmora-pdp-variant-options {
+   display: grid;
+   gap: 0.5rem;
+}
+
+.velmora-pdp-variant-option {
+   display: grid;
+   gap: 0.2rem;
+   width: 100%;
+   text-align: left;
+   border: 1px solid rgb(226 232 240 / 0.9);
+   border-radius: 0.75rem;
+   background: #ffffff;
+   padding: 0.75rem 0.85rem;
+   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.dark .velmora-pdp-variant-option {
+   border-color: rgb(51 65 85 / 0.9);
+   background: rgb(15 23 42 / 0.55);
+}
+
+.velmora-pdp-variant-option:hover:not(:disabled) {
+   border-color: rgb(37 99 235 / 0.45);
+}
+
+.velmora-pdp-variant-option.is-selected {
+   border-color: #2563eb;
+   box-shadow: 0 0 0 1px #2563eb;
+   background: rgb(239 246 255);
+}
+
+.dark .velmora-pdp-variant-option.is-selected {
+   background: rgb(30 58 138 / 0.25);
+}
+
+.velmora-pdp-variant-option.is-disabled {
+   opacity: 0.55;
+   cursor: not-allowed;
+}
+
+.velmora-pdp-variant-option-title {
+   font-size: 0.875rem;
+   font-weight: 700;
+   color: #111827;
+}
+
+.dark .velmora-pdp-variant-option-title {
+   color: #f8fafc;
+}
+
+.velmora-pdp-variant-option-meta,
+.velmora-pdp-variant-option-price,
+.velmora-pdp-variant-option-stock {
+   font-size: 0.75rem;
+   color: #64748b;
+}
+
+.velmora-pdp-variant-option-stock.is-in-stock {
+   color: #059669;
+   font-weight: 600;
+}
+
+.velmora-pdp-variant-option-stock.is-out-of-stock {
+   color: #94a3b8;
+   font-weight: 600;
+}
+
 .velmora-pdp-gallery-shell {
    border: none;
    background: transparent;

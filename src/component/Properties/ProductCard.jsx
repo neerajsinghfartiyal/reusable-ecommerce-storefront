@@ -55,6 +55,7 @@ function ProductCard({ product, currencySymbol = '$', variant = 'default' }) {
           <div className="velmora-product-card-footer">
             <div className="velmora-product-price-block min-w-0">
               <p className="velmora-product-card-price">
+                {product.hasVariants && product.priceIsRange ? 'From ' : ''}
                 {formatProductPrice(product.price, currencySymbol)}
               </p>
               {product.compareAtPrice != null ? (
@@ -65,7 +66,7 @@ function ProductCard({ product, currencySymbol = '$', variant = 'default' }) {
             </div>
 
             <Link to={product.detailPath || '#'} className="velmora-product-card-cta">
-              Shop
+              {product.hasVariants ? 'Choose options' : 'Shop'}
             </Link>
           </div>
         </div>
@@ -90,6 +91,7 @@ function ProductCard({ product, currencySymbol = '$', variant = 'default' }) {
         <div className="pt-3 mt-3 border-t border-slate-100 dark:border-gray-800 flex justify-between items-end gap-3">
           <div className="velmora-product-price-block">
             <p className="text-lg font-extrabold text-[#111827] dark:text-white">
+              {product.hasVariants && product.priceIsRange ? 'From ' : ''}
               {formatProductPrice(product.price, currencySymbol)}
             </p>
             {product.compareAtPrice != null ? (
@@ -103,7 +105,7 @@ function ProductCard({ product, currencySymbol = '$', variant = 'default' }) {
             to={product.detailPath || '#'}
             className="velmora-product-card-cta px-4 py-2 text-xs"
           >
-            Shop
+            {product.hasVariants ? 'Choose options' : 'Shop'}
           </Link>
         </div>
       </div>

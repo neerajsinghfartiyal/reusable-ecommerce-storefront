@@ -1,4 +1,4 @@
-import { resolveProductImageUrl } from '../lib/productMappers.js'
+import { resolveProductImageUrl, formatVariantOptionsLabel } from '../lib/productMappers.js'
 
 const getEntityId = (value) => {
   if (!value) return ''
@@ -66,6 +66,14 @@ const mapSelectedMethod = (methodRef, code = '') => {
   }
 }
 
+export const getCartLineKey = (productId, variantId = '') => {
+  const normalizedProductId = String(productId || '')
+  const normalizedVariantId = variantId ? String(variantId) : ''
+  return normalizedVariantId
+    ? `${normalizedProductId}:${normalizedVariantId}`
+    : normalizedProductId
+}
+
 export const mapCartFromApi = (cart) => {
   if (!cart) {
     return {
@@ -84,24 +92,54 @@ export const mapCartFromApi = (cart) => {
 
   const items = (Array.isArray(cart.items) ? cart.items : []).map((item) => {
     const productId = getEntityId(item.product)
+    const variantId = getEntityId(item.variantId)
     const product =
       item.product && typeof item.product === 'object' ? item.product : null
     const slug = product?.slug || ''
+    const variantOptionsLabel = formatVariantOptionsLabel(item.variantOptions)
+    const variantStockQuantity =
+      item.variantStockQuantity != null ? Number(item.variantStockQuantity) : undefined
+    const stockQuantity =
+      item.stockQuantity != null
+        ? Number(item.stockQuantity)
+        : variantStockQuantity != null
+          ? variantStockQuantity
+          : product?.quantity != null
+            ? Number(product.quantity)
+            : undefined
+    const maxQuantity =
+      item.maxQuantity != null
+        ? Number(item.maxQuantity)
+        : stockQuantity != null
+          ? stockQuantity
+          : undefined
+    const inStock =
+      item.inStock !== undefined && item.inStock !== null
+        ? Boolean(item.inStock)
+        : maxQuantity != null
+          ? maxQuantity > 0
+          : true
 
     return {
+      lineKey: getCartLineKey(productId, variantId),
       productId,
+      variantId,
       slug,
       name: item.productName || product?.name || 'Product',
+      variantTitle: item.variantTitle || '',
+      variantOptionsLabel,
       sku: item.sku || '',
       price: Number(item.price ?? 0),
       quantity: Number(item.quantity ?? 0),
       total: Number(item.total ?? 0),
       image: resolveProductImageUrl(
-        item.featuredImage || product?.featuredImage || '',
+        item.featuredImage || item.image || product?.featuredImage || '',
       ),
       detailPath: slug ? `/products/${slug}` : '#',
-      maxQuantity:
-        product?.quantity != null ? Number(product.quantity) : undefined,
+      stockQuantity,
+      variantStockQuantity,
+      maxQuantity,
+      inStock,
     }
   })
 

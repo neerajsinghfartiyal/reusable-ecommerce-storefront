@@ -109,6 +109,29 @@ export default function OrderSuccessPage() {
             <div className="px-6 py-4 border-b border-slate-100 dark:border-gray-800">
               <h2 className="text-lg font-bold text-[#111827] dark:text-white">Order summary</h2>
             </div>
+            {order.items?.length > 0 ? (
+              <ul className="divide-y divide-slate-100 dark:divide-gray-800 text-sm">
+                {order.items.map((item, index) => (
+                  <li key={`${item.productName}-${item.sku}-${index}`} className="px-6 py-3.5">
+                    <p className="font-medium text-[#111827] dark:text-white">{item.productName}</p>
+                    {item.variantTitle ? (
+                      <p className="text-xs text-[#64748B] mt-1">{item.variantTitle}</p>
+                    ) : null}
+                    {item.variantOptionsLabel ? (
+                      <p className="text-xs text-[#64748B] mt-1">{item.variantOptionsLabel}</p>
+                    ) : null}
+                    {item.sku ? (
+                      <p className="text-xs text-[#64748B] mt-1 uppercase tracking-wide">
+                        SKU: {item.sku}
+                      </p>
+                    ) : null}
+                    <p className="text-xs text-[#64748B] mt-2">
+                      Qty {item.quantity} · {formatProductPrice(item.total, currencySymbol)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <dl className="divide-y divide-slate-100 dark:divide-gray-800 text-sm">
               {order.customerName ? (
                 <div className="flex justify-between gap-4 px-6 py-3.5">

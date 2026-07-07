@@ -29,6 +29,8 @@ export const areProductCardViewsEqual = (left = {}, right = {}) =>
   left.discountPercent === right.discountPercent &&
   left.inStock === right.inStock &&
   left.quantity === right.quantity &&
+  left.hasVariants === right.hasVariants &&
+  left.priceIsRange === right.priceIsRange &&
   left.image === right.image &&
   left.categoryName === right.categoryName &&
   left.brandName === right.brandName &&
@@ -161,9 +163,219 @@ export const getRecentlyViewedProducts = (excludeProductId = '') => {
 
 export const getProductCardOfferLine = (product = {}) => {
   if (!product) return ''
+  if (product.hasVariants) return 'Choose options'
   if (product.discountPercent) return 'Live catalog price'
   if (product.inStock) return 'In stock'
   return ''
+}
+
+const flattenVariantOptions = (options = {}) => {
+  if (!options || typeof options !== 'object') return {}
+  if (options instanceof Map) return Object.fromEntries(options.entries())
+  return { ...options }
+}
+
+export const formatVariantOptionsLabel = (options = {}) => {
+  const flat = flattenVariantOptions(options)
+  return Object.entries(flat)
+    .filter(([key, value]) => String(key).trim() && String(value ?? '').trim())
+    .map(([key, value]) => {
+      const label = key.charAt(0).toUpperCase() + key.slice(1)
+      return `${label}: ${value}`
+    })
+    .join(' · ')
+}
+
+const sortVariants = (variants = []) =>
+  [...variants].sort((left, right) => {
+    const sortDiff = Number(left.sortOrder ?? 0) - Number(right.sortOrder ?? 0)
+    if (sortDiff !== 0) return sortDiff
+    return String(left.title || '').localeCompare(String(right.title || ''))
+  })
+
+const mapCanonicalVariant = (variant = {}, fallbackPrice = 0) => {
+  const price = Number(variant.price ?? fallbackPrice ?? 0)
+  const compareAtPrice =
+    variant.compareAtPrice !== undefined && variant.compareAtPrice !== null
+      ? Number(variant.compareAtPrice)
+      : null
+  const stockQuantity = Number(variant.stockQuantity ?? variant.quantity ?? 0)
+  const isActive = variant.isActive !== false && String(variant.status || 'active') !== 'inactive'
+  const options = flattenVariantOptions(variant.options)
+  const variantId = variant.variantId || getEntityId(variant._id || variant.id)
+
+  return {
+    variantId: String(variantId || ''),
+    sku: variant.sku || '',
+    title: variant.title || '',
+    options,
+    optionsLabel: formatVariantOptionsLabel(options),
+    price: Number.isNaN(price) ? 0 : price,
+    compareAtPrice:
+      compareAtPrice !== null && !Number.isNaN(compareAtPrice) ? compareAtPrice : null,
+    stockQuantity: Number.isNaN(stockQuantity) ? 0 : stockQuantity,
+    image: variant.image ? resolveProductImageUrl(variant.image) : '',
+    isActive,
+    sortOrder: Number(variant.sortOrder ?? 0),
+    inStock: isActive && stockQuantity > 0,
+  }
+}
+
+const mapLegacyVariationToVariant = (variation = {}, fallbackPrice = 0) => {
+  const salePrice =
+    variation.salePrice != null ? Number(variation.salePrice) : null
+  const basePrice = Number(variation.price ?? fallbackPrice ?? 0)
+  const effectivePrice =
+    salePrice !== null && !Number.isNaN(salePrice) ? salePrice : basePrice
+  const compareAtPrice =
+    salePrice !== null && !Number.isNaN(salePrice) && salePrice < basePrice ? basePrice : null
+  const attributes = Array.isArray(variation.attributes) ? variation.attributes : []
+  const options = {}
+
+  attributes.forEach((entry) => {
+    const key = String(entry?.name || entry?.code || '').trim()
+    const value = String(entry?.label || entry?.value || '').trim()
+    if (key && value) options[key] = value
+  })
+
+  const title =
+    attributes
+      .map((entry) => entry?.label || entry?.value || entry?.name)
+      .filter(Boolean)
+      .join(' / ') ||
+    variation.title ||
+    variation.sku ||
+    ''
+
+  return mapCanonicalVariant(
+    {
+      _id: variation._id || variation.id,
+      sku: variation.sku,
+      title,
+      options,
+      price: effectivePrice,
+      compareAtPrice,
+      stockQuantity: variation.quantity,
+      image: variation.image,
+      isActive: variation.status !== 'inactive',
+      sortOrder: 0,
+    },
+    fallbackPrice,
+  )
+}
+
+export const getProductVariants = (product = {}) => {
+  const apiVariants = Array.isArray(product.variants)
+    ? product.variants.filter((item) => item && typeof item === 'object')
+    : []
+
+  if (apiVariants.length > 0) {
+    return sortVariants(
+      apiVariants
+        .map((item) => mapCanonicalVariant(item, product.price))
+        .filter((item) => item.isActive),
+    )
+  }
+
+  const legacyVariations = Array.isArray(product.variations)
+    ? product.variations.filter((item) => item && typeof item === 'object')
+    : []
+
+  if (legacyVariations.length > 0) {
+    return sortVariants(
+      legacyVariations
+        .map((item) => mapLegacyVariationToVariant(item, product.price))
+        .filter((item) => item.isActive),
+    )
+  }
+
+  return []
+}
+
+export const productHasVariants = (product = {}) =>
+  product.hasVariants === true || getProductVariants(product).length > 0
+
+const getVariantPricingFromList = (variants = [], fallbackPrice = 0) => {
+  if (!variants.length) {
+    return {
+      price: fallbackPrice,
+      compareAtPrice: null,
+      priceIsRange: false,
+      inStock: false,
+      quantity: 0,
+    }
+  }
+
+  const prices = variants.map((item) => Number(item.price ?? 0)).filter((value) => !Number.isNaN(value))
+  const minPrice = prices.length ? Math.min(...prices) : fallbackPrice
+  const maxPrice = prices.length ? Math.max(...prices) : fallbackPrice
+  const inStock = variants.some((item) => item.inStock)
+  const quantity = variants
+    .filter((item) => item.isActive !== false)
+    .reduce((sum, item) => sum + Number(item.stockQuantity || 0), 0)
+
+  const compareValues = variants
+    .map((item) => item.compareAtPrice)
+    .filter((value) => value !== null && value !== undefined && !Number.isNaN(Number(value)))
+    .map((value) => Number(value))
+
+  return {
+    price: minPrice,
+    compareAtPrice: compareValues.length ? Math.max(...compareValues) : null,
+    priceIsRange: minPrice !== maxPrice,
+    inStock,
+    quantity,
+  }
+}
+
+export const resolveSelectedVariant = (product = {}, selectedVariantId = '') => {
+  if (!productHasVariants(product)) return null
+  return (
+    (product.variants || []).find(
+      (variant) => String(variant.variantId) === String(selectedVariantId),
+    ) || null
+  )
+}
+
+export const buildDisplayProduct = (product = {}, selectedVariantId = '') => {
+  if (!product || !productHasVariants(product)) return product
+
+  const selectedVariant = resolveSelectedVariant(product, selectedVariantId)
+  if (!selectedVariant) {
+    return {
+      ...product,
+      inStock: false,
+      quantity: 0,
+      availabilityLabel: 'Please select an option',
+      requiresVariantSelection: true,
+    }
+  }
+
+  const images = selectedVariant.image
+    ? normalizeImageList([selectedVariant.image, ...(product.images || [])])
+    : product.images
+
+  const stockQuantity = Number(selectedVariant.stockQuantity || 0)
+  const inStock = Boolean(selectedVariant.inStock)
+  const availabilityLabel = inStock
+    ? stockQuantity <= 5
+      ? `Only ${stockQuantity} left`
+      : 'In stock'
+    : 'Out of stock'
+
+  return {
+    ...product,
+    price: selectedVariant.price,
+    compareAtPrice: selectedVariant.compareAtPrice,
+    discountPercent: getDiscountPercent(selectedVariant.price, selectedVariant.compareAtPrice),
+    sku: selectedVariant.sku || product.sku,
+    quantity: stockQuantity,
+    inStock,
+    availabilityLabel,
+    images,
+    selectedVariant,
+    requiresVariantSelection: false,
+  }
 }
 
 export const getProductRowGridClass = (count = 4, variant = 'compact') => {
@@ -188,6 +400,32 @@ export const mapProductToCard = (product = {}) => {
   const basePrice = Number(product.price ?? 0)
   const displayPrice = salePrice != null && !Number.isNaN(salePrice) ? salePrice : basePrice
   const quantity = Number(product.quantity ?? 0)
+  const variants = getProductVariants(product)
+  const hasVariants = productHasVariants(product)
+
+  if (hasVariants && variants.length > 0) {
+    const variantPricing = getVariantPricingFromList(variants, displayPrice)
+
+    return {
+      id: getEntityId(product),
+      slug: product.slug || '',
+      title: product.name || 'Product',
+      image: resolveProductImageUrl(product.featuredImage),
+      price: variantPricing.price,
+      compareAtPrice: variantPricing.compareAtPrice,
+      discountPercent: getDiscountPercent(variantPricing.price, variantPricing.compareAtPrice),
+      priceIsRange: variantPricing.priceIsRange,
+      hasVariants: true,
+      categoryName: product.category?.name || '',
+      categoryId: getEntityId(product.category),
+      brandName: product.brand?.name || '',
+      sku: product.sku || '',
+      description: product.shortDescription || product.description || '',
+      inStock: variantPricing.inStock,
+      quantity: variantPricing.quantity,
+      detailPath: product.slug ? `/products/${product.slug}` : '#',
+    }
+  }
 
   const compareAtPrice =
     salePrice != null && !Number.isNaN(salePrice) && salePrice < basePrice ? basePrice : null
@@ -200,6 +438,8 @@ export const mapProductToCard = (product = {}) => {
     price: displayPrice,
     compareAtPrice,
     discountPercent: getDiscountPercent(displayPrice, compareAtPrice),
+    priceIsRange: false,
+    hasVariants: false,
     categoryName: product.category?.name || '',
     categoryId: getEntityId(product.category),
     brandName: product.brand?.name || '',
@@ -284,31 +524,19 @@ const mapAttributeSpecifications = (attributes = []) =>
     .filter((item) => item.value)
 
 const mapProductVariations = (variations = []) =>
-  (Array.isArray(variations) ? variations : []).map((variation) => {
-    const salePrice =
-      variation.salePrice != null ? Number(variation.salePrice) : null
-    const basePrice = Number(variation.price ?? 0)
-    const quantity = Number(variation.quantity ?? 0)
-
-    return {
-      sku: variation.sku || '',
-      price: basePrice,
-      salePrice: salePrice != null && !Number.isNaN(salePrice) ? salePrice : null,
-      quantity: Number.isNaN(quantity) ? 0 : quantity,
-      status: variation.status || 'active',
-      image: variation.image ? resolveProductImageUrl(variation.image) : null,
-      options: (Array.isArray(variation.attributes) ? variation.attributes : [])
-        .map((attr) => {
-          const label = attr.label || attr.value || ''
-          const name = attr.name || attr.code || ''
-          if (label && name) return `${name}: ${label}`
-          return label || name
-        })
-        .filter(Boolean)
-        .join(' · '),
-      inStock: !Number.isNaN(quantity) && quantity > 0 && variation.status === 'active',
-    }
-  })
+  getProductVariants({ variations }).map((variant) => ({
+    variantId: variant.variantId,
+    sku: variant.sku,
+    title: variant.title,
+    price: variant.price,
+    salePrice: variant.compareAtPrice,
+    quantity: variant.stockQuantity,
+    status: variant.isActive ? 'active' : 'inactive',
+    image: variant.image || null,
+    options: variant.optionsLabel || variant.title,
+    optionsLabel: variant.optionsLabel,
+    inStock: variant.inStock,
+  }))
 
 export const getAtGlanceSpecs = (product = {}, limit = 4) => {
   const specs = Array.isArray(product.specifications) ? product.specifications : []
@@ -350,6 +578,8 @@ export const mapProductToDetail = (product = {}) => {
   const inStock = !Number.isNaN(quantity) && quantity > 0
   const compareAtPrice =
     salePrice != null && !Number.isNaN(salePrice) && salePrice < basePrice ? basePrice : null
+  const variants = getProductVariants(product)
+  const hasVariants = productHasVariants(product)
 
   return {
     id: getEntityId(product),
@@ -377,10 +607,18 @@ export const mapProductToDetail = (product = {}) => {
     description: product.description || '',
     status: product.status || '',
     quantity: Number.isNaN(quantity) ? 0 : quantity,
-    inStock,
-    availabilityLabel: inStock ? 'In stock' : 'Out of stock',
+    inStock: hasVariants ? variants.some((variant) => variant.inStock) : inStock,
+    availabilityLabel: hasVariants
+      ? variants.some((variant) => variant.inStock)
+        ? 'Choose options'
+        : 'Out of stock'
+      : inStock
+        ? 'In stock'
+        : 'Out of stock',
     images: buildProductGalleryImages(product),
     specifications: mapAttributeSpecifications(product.attributes),
+    hasVariants,
+    variants,
     variations: mapProductVariations(product.variations),
   }
 }

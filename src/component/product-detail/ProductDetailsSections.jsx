@@ -77,12 +77,52 @@ export default function ProductDetailsSections({ product, currencySymbol }) {
             </div>
           ) : null}
 
-          {product.variations.length > 0 ? (
+          {product.variants?.length > 0 ? (
             <div className="velmora-pdp-details-card">
               <h3 className="velmora-pdp-details-title">Available options</h3>
-              <p className="text-xs text-amber-800 dark:text-amber-300 mb-2">
-                Variant-specific cart selection is not enabled yet.
-              </p>
+              <div className="overflow-x-auto -mx-1">
+                <table className="velmora-pdp-variant-table w-full text-sm">
+                  <thead>
+                    <tr>
+                      <th>Variant</th>
+                      <th>SKU</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.variants.map((variant) => (
+                      <tr key={variant.variantId || variant.sku || variant.title}>
+                        <td>{variant.title || variant.optionsLabel || 'Default'}</td>
+                        <td>{variant.sku || '—'}</td>
+                        <td>
+                          <span className="font-semibold text-[#111827] dark:text-white">
+                            {formatProductPrice(variant.price, currencySymbol)}
+                          </span>
+                          {variant.compareAtPrice != null ? (
+                            <span className="ms-2 text-xs text-[#64748B] line-through">
+                              {formatProductPrice(variant.compareAtPrice, currencySymbol)}
+                            </span>
+                          ) : null}
+                        </td>
+                        <td>
+                          <span
+                            className={
+                              variant.inStock ? 'text-emerald-600 font-semibold' : 'text-slate-500'
+                            }
+                          >
+                            {variant.inStock ? 'In stock' : 'Out of stock'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : product.variations.length > 0 ? (
+            <div className="velmora-pdp-details-card">
+              <h3 className="velmora-pdp-details-title">Available options</h3>
               <div className="overflow-x-auto -mx-1">
                 <table className="velmora-pdp-variant-table w-full text-sm">
                   <thead>
@@ -95,8 +135,8 @@ export default function ProductDetailsSections({ product, currencySymbol }) {
                   </thead>
                   <tbody>
                     {product.variations.map((variation) => (
-                      <tr key={variation.sku || variation.options}>
-                        <td>{variation.options || 'Default'}</td>
+                      <tr key={variation.variantId || variation.sku || variation.options}>
+                        <td>{variation.title || variation.options || 'Default'}</td>
                         <td>{variation.sku || '—'}</td>
                         <td>
                           <span className="font-semibold text-[#111827] dark:text-white">
@@ -105,11 +145,6 @@ export default function ProductDetailsSections({ product, currencySymbol }) {
                               currencySymbol,
                             )}
                           </span>
-                          {variation.salePrice != null ? (
-                            <span className="ms-2 text-xs text-[#64748B] line-through">
-                              {formatProductPrice(variation.price, currencySymbol)}
-                            </span>
-                          ) : null}
                         </td>
                         <td>
                           <span

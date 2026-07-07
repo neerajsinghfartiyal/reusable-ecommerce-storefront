@@ -85,21 +85,21 @@ export default function CartPage() {
     })
   }, [loading, items.length, subtotal, loadCheckoutOptions])
 
-  const handleQuantityChange = async (productId, nextQuantity) => {
+  const handleQuantityChange = async (productId, nextQuantity, variantId = '') => {
     setItemError('')
 
     try {
-      await updateQuantity(productId, nextQuantity)
+      await updateQuantity(productId, nextQuantity, variantId)
     } catch (err) {
       setItemError(err?.message || 'Could not update quantity.')
     }
   }
 
-  const handleRemove = async (productId) => {
+  const handleRemove = async (productId, variantId = '') => {
     setItemError('')
 
     try {
-      await removeItem(productId)
+      await removeItem(productId, variantId)
     } catch (err) {
       setItemError(err?.message || 'Could not remove item.')
     }
@@ -210,11 +210,11 @@ export default function CartPage() {
               <div className="lg:col-span-7 xl:col-span-8 space-y-4">
                 <ul className="list-none space-y-4 m-0 p-0">
                   {items.map((item) => (
-                    <li key={item.productId}>
+                    <li key={item.lineKey || item.productId}>
                       <CartLineItem
                         item={item}
                         currencySymbol={currencySymbol}
-                        isUpdating={actionProductId === item.productId}
+                        isUpdating={actionProductId === (item.lineKey || item.productId)}
                         onQuantityChange={handleQuantityChange}
                         onRemove={handleRemove}
                       />

@@ -19,6 +19,28 @@ export const mapOrderToSuccessSummary = (order = {}) => {
   const customer =
     order.customer && typeof order.customer === 'object' ? order.customer : null
 
+  const items = (Array.isArray(order.items) ? order.items : []).map((item) => {
+    const variantOptions = item.variantOptions || {}
+    const optionEntries =
+      variantOptions instanceof Map
+        ? Object.fromEntries(variantOptions.entries())
+        : variantOptions
+    const variantOptionsLabel = Object.entries(optionEntries || {})
+      .filter(([key, value]) => String(key).trim() && String(value ?? '').trim())
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(' · ')
+
+    return {
+      productName: item.productName || 'Product',
+      variantTitle: item.variantTitle || '',
+      variantOptionsLabel,
+      sku: item.sku || '',
+      quantity: Number(item.quantity || 0),
+      total: Number(item.total || item.lineTotal || 0),
+      price: Number(item.price || item.unitPrice || 0),
+    }
+  })
+
   return {
     orderId: getEntityId(order),
     orderNumber: order.orderNumber || '',
@@ -35,6 +57,7 @@ export const mapOrderToSuccessSummary = (order = {}) => {
       getMethodLabel(order.shippingMethod, order.shippingMethodSnapshot) || '—',
     paymentStatus: order.paymentStatus || '',
     orderStatus: order.orderStatus || '',
+    items,
   }
 }
 
